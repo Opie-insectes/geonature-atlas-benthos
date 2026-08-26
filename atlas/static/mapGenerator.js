@@ -39,29 +39,24 @@ function clearObservationsFeatureGroup() {
 }
 
 function generateObservationPopup(feature) {
-    /*
-      Génération popup des observations
-    */
-
+    // Génération popup des observations
     popupContent = `
-            <b>Date: </b> ${feature.properties.dateobs}
-            </br><b>Altitude: </b> ${feature.properties.altitude_retenue}
-            ${observersTxt(feature)} </br>
-            <a href='${window.LANGUAGE_PREFIXED_URL_APPLICATION}/espece/${feature.properties.cd_ref}'> Fiche espèce </a>
-            `;
+        <b>Date&nbsp;: </b> ${feature.properties.dateobs.replaceAll("-", "/")}
+        </br><b>Altitude&nbsp;: </b> ${feature.properties.altitude_retenue}
+        ${observersTxt(feature)} </br>
+        <a href='${window.LANGUAGE_PREFIXED_URL_APPLICATION}/espece/${feature.properties.cd_ref}'> Fiche espèce </a>
+    `;
 
-    // verifie si le champs effectif est rempli
+    // Vérifie si le champ effectif est rempli.
     if (feature.properties.effectif_total !== undefined) {
         popupContent = `${popupContent} </br><b>Effectif: </b>${feature.properties.effectif_total}`;
     }
 
-    // S'il faut lier à une fiche espèce
+    // S'il faut lier à une fiche espèce.
     if (feature.properties.taxon) {
-        popupContent = `<b>Espèce: </b> ${feature.properties.taxon} </br>
-              ${popupContent}
-              </br>
-              `;
+        popupContent = `<b>Espèce: </b> ${feature.properties.taxon} </br> ${popupContent} </br>`;
     }
+
     return popupContent;
 }
 
@@ -464,7 +459,7 @@ function generateMap(zoomHomeButton) {
 
 function observersTxt(feature) {
     return configuration.DISPLAY_OBSERVERS
-        ? `</br><b> Observateurs(s): </b> ${feature.properties.observateurs}`
+        ? `</br><b> Observateur·ice·s&nbsp;: </b> ${feature.properties.observateurs}`
         : "";
 }
 
@@ -584,7 +579,7 @@ function generateObservationsLegend(isMaille = false) {
     if (L.DomUtil.get("contour-legend")) {
         return;
     }
-    var div = L.DomUtil.create("div", "info legend"),
+    var div = L.DomUtil.create("div", "info"),
         grades = [0, 1, 2, 5, 10, 20, 50, 100],
         labels = [
             "<div  style='padding-bottom: 1rem'><strong> Nombre d'observations </strong></div>",
@@ -616,7 +611,7 @@ function generateObservationsLegend(isMaille = false) {
 
 function generalLegendPoint() {
     if (typeof divLegendeFicheEspece !== "undefined") {
-        var div = L.DomUtil.create("div", "info legend");
+        var div = L.DomUtil.create("div", "info");
         div.innerHTML = divLegendeFicheEspece;
         return div;
     }

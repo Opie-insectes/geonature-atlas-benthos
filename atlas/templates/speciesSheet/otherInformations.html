@@ -11,7 +11,7 @@
             {% endif %}
                 <li class="nav-item">
                     <a data-bs-toggle="tab" class="nav-link {% if articles | length == 0 %}  active {% endif %}" href="#area">
-                        <b>{{ areas['length'] }}</b> {{ _("areas")|lower if areas['length'] > 1 else _("area")|lower }}
+                        <b>{{ areas['length'] }}</b> département{{ "s" if areas['length'] > 1 else "" }}
                     </a>
                 </li>
 
@@ -85,13 +85,8 @@
             {% endif %}
                     <p>
                         {% for type_code in configuration.TYPE_TERRITOIRE_SHEET %}
-                            {% for com in areas[type_code] %}
-                                {% if loop.first %}
-                                    {% if areas.nb_territory_type != 1 and com.type_name != "COM" %}
-                                        <div class="type_name">{{ com.type_name }} :</div>
-                                    {% endif %}
-                                {% endif %}
-                                <a href="{{ url_for('main.area', id_area = com.id_area) }}">{{ com.area_name }}</a>
+                            {% for area in areas["DEP"] %}
+                                <a href="{{ url_for('main.area', id_area = area.id_area) }}">{{ area.area_name }}</a>
                                 {% if not loop.last %} - {% endif %}
                             {% endfor %}
                         {% endfor %}

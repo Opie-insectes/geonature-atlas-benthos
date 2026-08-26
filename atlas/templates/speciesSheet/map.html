@@ -20,7 +20,7 @@
                     <i class="fas fa-map-signs fa-2x"></i> <br/>
                     <b>{{ areas['length']|pretty }}</b><br/>
                     <span style="font-size: 0.90rem">
-                        {{ _("areas") |lower if areas['length'] > 1 else _("area")|lower }}
+                        département{{ "s" if areas['length'] > 1 else "" }}
                     </span>
                 </li>
 

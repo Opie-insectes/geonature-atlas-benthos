@@ -34,13 +34,14 @@
                                     - {{ photo.source }}
                                     {% endif %}
                                     ">
-                        <div class="slider-size" style="background-image: url({{ img_path }})"
-                             alt="{{ photo.title }} &copy; {{ photo.author|striptags }}">
-                            <div class="carousel-caption">
+                        <div
+                            class="slider-size"
+                            style="background-image: url({{ img_path }})"
+                            title="{{ photo.title }} &copy; {{ photo.author|striptags }}"
+                        >
+                            <div class="carousel-caption small">
                                 {{ photo.title|safe }} &copy; {{ photo.author|striptags }}
-                                {% if photo.licence %}
-                                    - {{ photo.licence }}
-                                {% endif %}
+                                {% if photo.licence %} — {{ photo.licence }}{% endif %}
                             </div>
                         </div>
                     </a>

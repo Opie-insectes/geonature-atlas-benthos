@@ -336,7 +336,7 @@ h5#buttonChild:hover {
     height: 200px;
 }
 
-#graphBloc svg {
+.graph-block svg {
     padding: 5px;
 }
 

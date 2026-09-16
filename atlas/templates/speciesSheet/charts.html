@@ -1,6 +1,6 @@
 {% block charts %}
     {% if configuration.AFFICHAGE_GRAPH_ALTITUDES %}
-        <div class="card mt-4" id="graphBloc">
+        <div class="card mt-4 graph-block">
             <div class="card-body p-2">
                 <h4 class="title-bar title-spaced text-center fw-bold">{{ _('alt.classes.obs') }}</h4>
             </div>
@@ -11,7 +11,7 @@
     {% endif %}
 
     {% if configuration.AFFICHAGE_GRAPH_PHENOLOGIE %}
-        <div class="card mt-4" id="graphBloc">
+        <div class="card mt-4 graph-block">
             <div class="card-body p-2">
                 <h4 class="title-bar title-spaced text-center fw-bold">{{ _('monthly.obs') }}</h4>
             </div>
@@ -22,7 +22,7 @@
     {% endif %}
     
     {% if configuration.ORGANISM_MODULE %}
-        <div class="card mt-4" id="graphBloc">
+        <div class="card mt-4 graph-block">
             <div class="card-body p-2">
                 <h4 class="title-bar title-spaced text-center fw-bold">{{ _('data.source') }}</h4>
             </div>

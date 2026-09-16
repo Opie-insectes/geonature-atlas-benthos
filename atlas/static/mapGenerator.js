@@ -25,7 +25,7 @@ function isMobile() {
 }
 
 const control = L.control.layers(null, null, {
-    collapsed: isMobile(),
+    collapsed: true,
 });
 
 function clearObservationsFeatureGroup() {

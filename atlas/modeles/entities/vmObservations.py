@@ -24,6 +24,7 @@ class VmObservations(db.Model):
     cd_sensitivity: Mapped[str] = mapped_column(String(255))
     id_dataset: Mapped[int] = mapped_column()
     taxon: Mapped[VmTaxons] = relationship(VmTaxons)
+    id_nomenclature_life_stage: Mapped[int] = mapped_column()
 
     def as_dict(self):
         return {
@@ -34,6 +35,7 @@ class VmObservations(db.Model):
             "altitude_retenue": self.altitude_retenue,
             "cd_ref": self.cd_ref,
             "cd_sensitivity": self.cd_sensitivity,
+            "life_stage": self.id_nomenclature_life_stage
         }
 
 

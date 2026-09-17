@@ -52,7 +52,8 @@ CREATE MATERIALIZED VIEW atlas.vm_observations AS
         (s.altitude_min + s.altitude_max) / 2 AS altitude_retenue,
         s.observers AS observateurs,
         s.id_dataset,
-        tx.cd_ref
+        tx.cd_ref,
+        s.id_nomenclature_life_stage
     FROM :observation_data_source AS s
         JOIN centroids AS c
             ON c.id_synthese = s.id_synthese

@@ -39,16 +39,10 @@
                     {% endif %}
                 </li>
 
-                <li id="firstObs" class="pointer">
-                    <i class="fas fa-search fa-2x"></i> <br/>
-                    <span style="font-size: 0.90rem">{{ _('first.obs') }}</span><br/>
-                    <b>{{ taxon.taxonSearch.yearmin|int }}</b>
-                </li>
-
                 <li id="lastObs" class="pointer">
                     <i class="far fa-clock fa-2x"></i> <br/>
-                    <span style="font-size: 0.90rem">{{ _('last.obs') }}</span><br/>
-                    <b>{{ taxon.taxonSearch.yearmax|int }}</b>
+                    <span style="font-size: 0.90rem">{{ _('first_and_last_obs') }}</span><br/>
+                    <b>{{ taxon.taxonSearch.yearmin|int }}&ndash;{{ taxon.taxonSearch.yearmax|int }}</b>
                 </li>
             </ul>
         </div>

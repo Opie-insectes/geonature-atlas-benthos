@@ -529,9 +529,9 @@ function attachMailleHandlers(layer, onClickHandler) {
 // eslint-disable-next-line no-unused-vars
 function onEachFeatureMaille(feature, layer) {
     popupContent =
-        "<b>Nombre d'observation(s): </b>" +
+        "<b>Nombre d'observation(s)&nbsp;: </b>" +
         feature.properties.nb_observations +
-        "</br> <b> Dernière observation: </b>" +
+        "</br> <b> Dernière observation&nbsp;: </b>" +
         feature.properties.last_observation +
         " ";
     layer.bindPopup(popupContent);
@@ -589,7 +589,7 @@ function generateObservationsLegend(isMaille = false) {
     grades.forEach((grade, i) => {
         const next = grades[i + 1];
         // Ajout d'un plus si c'est la dernière valeur
-        const grade_n1 = next ? ` &ndash; ${next} <br>` : "+";
+        const grade_n1 = next ? `&hairsp;&ndash;&hairsp;${next} <br>` : "+";
         // Si les 2 valeurs sont identiques, alors on en affiche qu'une
         const label =
             next === grade + 1 ? `${next}  <br>` : `${grade + 1}${grade_n1}`;

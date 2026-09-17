@@ -6,7 +6,7 @@ genericChart = function (element, labels, values) {
             labels: labels,
             datasets: [
                 {
-                    label: window.i18n.observations,
+                    label: window.i18n.observations + ' ',
                     data: values,
                     backgroundColor: chartMainColor,
                     hoverBackgroundColor: chartHoverMainColor,

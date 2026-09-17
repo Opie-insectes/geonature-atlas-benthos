@@ -8,6 +8,7 @@ class VmMois(db.Model):
     __table_args__ = {"schema": "atlas"}
 
     cd_ref: Mapped[int] = mapped_column(primary_key=True)
+    id_nomenclature_life_stage: Mapped[int] = mapped_column()
     _01: Mapped[int] = mapped_column()
     _02: Mapped[int] = mapped_column()
     _03: Mapped[int] = mapped_column()

@@ -34,14 +34,14 @@ $function$
         IF mesaltitudes.id_altitude = 1 THEN
             monsql = monsql || 'alt' || mesaltitudes.id_altitude  || ' AS ('
                 || 'SELECT cd_ref, count(*) AS nb '
-                || 'FROM atlas.vm_observations '
+                || 'FROM atlas.vm_observations_grp '
                 || 'WHERE altitude_retenue < ' || mesaltitudes.altitude_max || ' '
                 || 'GROUP BY cd_ref'
                 ||') ';
         ELSE
             monsql = monsql || ', alt' || mesaltitudes.id_altitude || ' AS ('
                 || 'SELECT cd_ref, count(*) AS nb '
-                || 'FROM atlas.vm_observations '
+                || 'FROM atlas.vm_observations_grp '
                 || 'WHERE altitude_retenue BETWEEN '
                 || mesaltitudes.altitude_min || ' AND ' || mesaltitudes.altitude_max || ' '
                 || 'GROUP BY cd_ref'
@@ -57,7 +57,7 @@ $function$
             || mesaltitudes.label_altitude;
     END LOOP;
 
-    monsql = monsql || ' FROM atlas.vm_observations o';
+    monsql = monsql || ' FROM atlas.vm_observations_grp o';
 
     FOR mesaltitudes IN SELECT * FROM atlas.bib_altitudes LOOP
         monsql = monsql

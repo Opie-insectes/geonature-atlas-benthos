@@ -12,15 +12,15 @@ CREATE MATERIALIZED VIEW atlas.vm_taxons_plus_observes AS
         m.url,
         m.chemin,
         m.id_type
-    FROM atlas.vm_observations AS obs
+    FROM atlas.vm_observations_grp AS obs
         JOIN atlas.vm_taxons AS tax
             ON tax.cd_ref = obs.cd_ref
         LEFT JOIN atlas.vm_medias AS m
             ON (m.cd_ref = obs.cd_ref AND m.id_type = 1)
-    WHERE date_part('day', obs.dateobs) >= date_part('day', 'now'::date - :taxon_time)
-        AND date_part('month', obs.dateobs) = date_part('month', 'now'::date - :taxon_time)
-        OR date_part('day', obs.dateobs) <= date_part('day', 'now'::date + :taxon_time)
-        AND date_part('month', obs.dateobs) = date_part('day', 'now'::date + :taxon_time)
+    WHERE date_part('day', obs.date_min) >= date_part('day', 'now'::date - :taxon_time)
+        AND date_part('month', obs.date_min) = date_part('month', 'now'::date - :taxon_time)
+        OR date_part('day', obs.date_max) <= date_part('day', 'now'::date + :taxon_time)
+        AND date_part('month', obs.date_max) = date_part('day', 'now'::date + :taxon_time)
     GROUP BY obs.cd_ref, tax.lb_nom, tax.group2_inpn, tax.nom_vern, m.id_media, m.url, m.chemin, m.id_type
     ORDER BY (count(*)) DESC
     LIMIT 12

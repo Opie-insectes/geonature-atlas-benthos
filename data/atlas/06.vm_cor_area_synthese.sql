@@ -9,6 +9,7 @@ SELECT
     cas.id_area,
     bat.id_type,
     bat.type_code,
+    syn.unique_id_sinp_grp AS uuid_observation,
     CASE
         -- Si l'observation n'est pas sensible, tous les zonages sont valides
         WHEN (s.cd_sensitivity = '0' OR s.cd_sensitivity IS NULL) THEN TRUE
@@ -23,6 +24,7 @@ JOIN ref_geo.bib_areas_types bat ON a.id_type = bat.id_type
 JOIN atlas.vm_observations s ON cas.id_synthese = s.id_observation
 JOIN atlas.vm_cor_sensitivity_area_type csat ON s.cd_sensitivity = csat.sensitivity_code
 JOIN ref_geo.bib_areas_types bat_flou ON csat.area_type_code = bat_flou.type_code
+JOIN gn_synthese.synthese syn USING (id_synthese)
 ;
 
 CREATE UNIQUE INDEX ON atlas.vm_cor_area_synthese

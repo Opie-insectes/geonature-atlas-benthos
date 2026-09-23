@@ -3,10 +3,10 @@ CREATE MATERIALIZED VIEW atlas.vm_taxons AS
     WITH observations_stats AS (
         SELECT
             cd_ref,
-            min(date_part('year'::text, dateobs)) AS yearmin,
-            max(date_part('year'::text, dateobs)) AS yearmax,
-            count(id_observation) AS nb_obs
-        FROM atlas.vm_observations
+            min(date_part('year'::text, date_min)) AS yearmin,
+            max(date_part('year'::text, date_max)) AS yearmax,
+            count(uuid_observation) AS nb_obs
+        FROM atlas.vm_observations_grp
         GROUP BY cd_ref
     ),
     taxons_infos AS (

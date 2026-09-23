@@ -393,6 +393,7 @@ function executeFile() {
 function createAtlasSchemaEntities() {
     printMsg "Creating materialized views..."
     local scripts_sql=(
+        "00.ref_nomenclatures.sql"
         "01.vm_taxref.sql"
         "02.ref_geo.sql"
         "03.bdc_statut.sql"

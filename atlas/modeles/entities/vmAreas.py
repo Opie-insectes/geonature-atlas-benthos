@@ -1,10 +1,12 @@
 # coding: utf-8
 from geoalchemy2.types import Geometry
 from sqlalchemy import String, Text, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 from atlas.env import db
 from typing import List
+import uuid
 
 
 class VmBibAreasTypes(db.Model):
@@ -48,6 +50,7 @@ class VmCorAreaSynthese(db.Model):
     id_area: Mapped[int] = mapped_column(primary_key=True)
     id_type: Mapped[int] = mapped_column(primary_key=True)
     type_code: Mapped[str] = mapped_column(String(25))
+    uuid_observation: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True)
     is_valid_for_display: Mapped[bool]
 
 

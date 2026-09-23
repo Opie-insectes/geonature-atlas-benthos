@@ -1,38 +1,62 @@
 # -*- coding:utf-8 -*-
 
-from sqlalchemy.sql import func, select, or_
-from atlas.modeles.entities.vmMois import VmMois
+from sqlalchemy.sql import extract, func, select, or_
+from atlas.modeles.entities.vmMois import VmMois, VmMoisGrp
+from atlas.modeles.entities.vmNomenclatures import VmNomenclatures
 from atlas.env import db
+from atlas.utils import get_locale
+
+MONTH_COLUMNS = [f"_{month:02d}" for month in range(1, 13)]
+
+# Map lang codes to the appropriate VmNomenclatures column.
+LABEL_COLUMNS = {
+    attr[6:]: getattr(VmNomenclatures, attr)
+    for attr in dir(VmNomenclatures)
+    if attr.startswith('label_') and attr != 'label_default'
+}
 
 
-def getMonthlyObservationsChilds(cd_ref):
+def getMonthlyObservations(cd_ref):
     childs_ids = select(func.atlas.find_all_taxons_childs(cd_ref))
-    mesMois = db.session.query(
-        func.sum(VmMois._01).label("_01"),
-        func.sum(VmMois._02).label("_02"),
-        func.sum(VmMois._03).label("_03"),
-        func.sum(VmMois._04).label("_04"),
-        func.sum(VmMois._05).label("_05"),
-        func.sum(VmMois._06).label("_06"),
-        func.sum(VmMois._07).label("_07"),
-        func.sum(VmMois._08).label("_08"),
-        func.sum(VmMois._09).label("_09"),
-        func.sum(VmMois._10).label("_10"),
-        func.sum(VmMois._11).label("_11"),
-        func.sum(VmMois._12).label("_12"),
-    ).filter(or_(VmMois.cd_ref.in_(childs_ids), VmMois.cd_ref == cd_ref))
-    for inter in mesMois:
-        return [
-            {"mois": "Janvier", "value": inter._01},
-            {"mois": "Fevrier", "value": inter._02},
-            {"mois": "Mars", "value": inter._03},
-            {"mois": "Avril", "value": inter._04},
-            {"mois": "Mai", "value": inter._05},
-            {"mois": "Juin", "value": inter._06},
-            {"mois": "Juillet", "value": inter._07},
-            {"mois": "Aout", "value": inter._08},
-            {"mois": "Septembre", "value": inter._09},
-            {"mois": "Octobre", "value": inter._10},
-            {"mois": "Novembre", "value": inter._11},
-            {"mois": "Decembre", "value": inter._12},
-        ]
+
+    mesMois = (
+        db.session.query(
+            *[func.sum(getattr(VmMoisGrp, col)).label(col) for col in MONTH_COLUMNS],
+        )
+        .filter(or_(VmMoisGrp.cd_ref.in_(childs_ids), VmMoisGrp.cd_ref == cd_ref))
+        .one()
+    )
+
+    return [mois for mois in mesMois]
+
+
+def getMonthlyIndividualsPerLifeStage(cd_ref):
+    childs_ids = select(func.atlas.find_all_taxons_childs(cd_ref))
+    label_column = LABEL_COLUMNS.get(get_locale(), VmNomenclatures.label_default)
+
+    mesMois = (
+        db.session.query(
+            VmMois.id_nomenclature_life_stage.label("life_stage_id"),
+            func.coalesce(label_column, VmNomenclatures.label_default).label("life_stage"),
+            *[func.sum(getattr(VmMois, col)).label(col) for col in MONTH_COLUMNS],
+        )
+        .outerjoin(
+            VmNomenclatures,
+            VmNomenclatures.id_nomenclature == VmMois.id_nomenclature_life_stage,
+        )
+        .filter(or_(VmMois.cd_ref.in_(childs_ids), VmMois.cd_ref == cd_ref))
+        .group_by(
+            VmMois.id_nomenclature_life_stage,
+            VmNomenclatures.label_default,
+            label_column,
+        )
+        .order_by(VmMois.id_nomenclature_life_stage)
+    )
+
+    return [
+        {
+            "life_stage": inter.life_stage,
+            "values": [getattr(inter, col) for col in MONTH_COLUMNS],
+        }
+        for inter in mesMois
+    ]

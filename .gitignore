@@ -9,6 +9,7 @@ atlas/static/node_modules/
 
 atlas/static/custom/*
 !atlas/static/custom/.gitkeep
+!atlas/static/custom/custom.css
 
 # Docs
 docs/_build

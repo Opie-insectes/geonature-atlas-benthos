@@ -184,7 +184,8 @@ def ficheEspece(cd_nom):
     # Get data to render template
     taxon = vmTaxrefRepository.searchEspece(cd_ref)
     altitudes = vmAltitudesRepository.getAltitudesChilds(cd_ref)
-    months = vmMoisRepository.getMonthlyObservationsChilds(cd_ref)
+    months_den = vmMoisRepository.getMonthlyIndividualsPerLifeStage(cd_ref)
+    months_obs = vmMoisRepository.getMonthlyObservations(cd_ref)
     organism_stats = None
     if current_app.config["ORGANISM_MODULE"]:
         organism_stats = vmCorTaxonOrganismRepository.getTaxonOrganism(cd_ref)
@@ -235,7 +236,8 @@ def ficheEspece(cd_nom):
         observations=[],
         cd_ref=cd_ref,
         altitudes=altitudes,
-        months=months,
+        months_den=months_den,
+        months_obs=months_obs,
         organism_stats=organism_stats,
         synonyme=synonyme,
         areas=areas,

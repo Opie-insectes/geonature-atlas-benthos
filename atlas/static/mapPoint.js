@@ -98,8 +98,8 @@ function setupSlider() {
         yearMin = years[0];
         yearMax = years[1];
 
-        $("#yearMin").html(yearMin + "&nbsp;&nbsp;&nbsp;&nbsp;");
-        $("#yearMax").html("&nbsp;&nbsp;&nbsp;&nbsp;" + yearMax);
+        $("#yearMin").html(yearMin);
+        $("#yearMax").html(yearMax);
     });
 
     mySlider.on("slideStop", function () {

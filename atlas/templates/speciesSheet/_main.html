@@ -31,8 +31,9 @@
     <script src="{{ url_for('static', filename='node_modules/lightbox2/dist/js/lightbox.min.js') }}"></script>
 
     <script>
-        var dataset = {{ altitudes| tojson }};
-        var months_value = {{ months | tojson }};
+        var dataset = {{ altitudes | tojson }};
+        var months_den_value = {{ months_den | tojson }};
+        var months_obs_value = {{ months_obs | tojson }};
         {% if configuration.MULTILINGUAL %}
             var months_name = {{ configuration.AVAILABLE_LANGUAGES[current_language]['months'] | tojson }};
         {% else %}

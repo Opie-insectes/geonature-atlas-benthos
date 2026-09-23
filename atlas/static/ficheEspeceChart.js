@@ -38,6 +38,51 @@ genericChart = function (element, labels, values) {
     });
 };
 
+// Stacked vertical bar graph (one dataset per life stage, should be 3)
+const monthsBarColors = {
+    Adulte: "#395ca3",
+    Larve: "#7ea0e6",
+    Exuvie: "#e7dbc1",
+}
+
+monthsBarChart = function (element, labels, series) {
+    return new Chart(element, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: series
+                .filter((serie) => serie.life_stage !== 'Inconnu')
+                .map((serie, index) => ({
+                    label: (serie.life_stage || "N/A") + ' ',
+                    data: serie.values,
+                    backgroundColor: monthsBarColors[serie.life_stage] ?? "#7f7f7f",
+                    borderWidth: 0,
+                })),
+        },
+        options: {
+            scales: {
+                y: {
+                    ticks: {
+                        beginAtZero: true,
+                    },
+                },
+                x: {
+                    grid: {
+                        display: false,
+                    },
+                },
+            },
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: "top",
+                    display: true,
+                },
+            },
+        },
+    });
+};
+
 // pie chart config for zoning sheet and areaSheet
 
 pieChartConfig = function (element, data) {
@@ -94,15 +139,17 @@ const getChartDatas = function (data, key) {
     return values;
 };
 
-var monthChartElement = document.getElementById("monthChart");
-if (monthChartElement) {
-    genericChart(
-        monthChartElement,
-        months_name,
-        getChartDatas(months_value, "value"),
-    );
+const monthObsChartElement = document.getElementById("monthObsChart");
+if (monthObsChartElement) {
+    genericChart(monthObsChartElement, months_name, months_obs_value);
 }
-var altiChartElement = document.getElementById("altiChart");
+
+const monthLifeStagesChartElement = document.getElementById("monthLifeStagesChart");
+if (monthLifeStagesChartElement) {
+    monthsBarChart(monthLifeStagesChartElement, months_name, months_den_value);
+}
+
+const altiChartElement = document.getElementById("altiChart");
 if (altiChartElement) {
     genericChart(
         altiChartElement,

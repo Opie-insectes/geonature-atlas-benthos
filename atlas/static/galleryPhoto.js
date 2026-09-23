@@ -62,7 +62,7 @@ function generateHtmlPhoto(photos, redimentionnement, taxhub_url) {
                                 style="background-image:url('${photo_url}')"
                                 alt="${photo.name}"
                             ></div>
-                            <div class="zoom-effect-overlay text-white fw-bold">
+                            <div class="zoom-effect-overlay text-white">
                                 <div class="center">
                                     ${photo.name} </br>
                                     ${photo.nb_obs} observations

@@ -54,7 +54,7 @@ function generateObservationPopup(feature) {
 
     // S'il faut lier à une fiche espèce.
     if (feature.properties.taxon) {
-        popupContent = `<b>Espèce: </b> ${feature.properties.taxon} </br> ${popupContent} </br>`;
+        popupContent = `<b>Espèce&nbsp;: </b> ${feature.properties.taxon} </br> ${popupContent} </br>`;
     }
 
     return popupContent;
@@ -333,6 +333,7 @@ function generateMap(zoomHomeButton) {
     // Map initialization
     firstMapTile = L.tileLayer(configuration.MAP.FIRST_MAP.url, {
         attribution: configuration.MAP.FIRST_MAP.attribution,
+        className: 'greyscale-tiles'
     });
     orthoMap = L.tileLayer(configuration.MAP.SECOND_MAP.url, {
         attribution: configuration.MAP.SECOND_MAP.attribution,
@@ -403,7 +404,7 @@ function generateMap(zoomHomeButton) {
             container.style.cursor = "pointer";
             $(container).attr("data-bs-placement", "right");
             $(container).attr("data-bs-toggle", "tooltip");
-            $(container).attr("title", "Photos aérienne");
+            $(container).attr("title", "Basculer le fond de carte");
 
             container.onclick = function () {
                 if (currentTileMap === "topo") {
@@ -420,7 +421,7 @@ function generateMap(zoomHomeButton) {
                         "url(" +
                         configuration.URL_APPLICATION +
                         "/static/images/logo_earth_map.PNG)";
-                    $(container).attr("title", "Photos aérienne");
+                    $(container).attr("title", "Photos aériennes");
                     map.removeLayer(orthoMap);
                     firstMapTile.addTo(map);
                     currentTileMap = "topo";
@@ -555,20 +556,20 @@ function zoomMaille(layer) {
 // Style maille
 function getColor(d) {
     return d > 100
-        ? "#800026"
+        ? "#1d325d"
         : d > 50
-          ? "#BD0026"
+          ? "#395ca3"
           : d > 20
-            ? "#E31A1C"
+            ? "#5171b4"
             : d > 10
-              ? "#FC4E2A"
+              ? "#6886c5"
               : d > 5
-                ? "#FD8D3C"
+                ? "#819cd7"
                 : d > 2
-                  ? "#FEB24C"
+                  ? "#9ab2e8"
                   : d > 1
-                    ? "#FED976"
-                    : "#FFEDA0";
+                    ? "#b3c8f9"
+                    : "#ebf1fe";
 }
 
 function generateObservationsLegend(isMaille = false) {
@@ -830,7 +831,7 @@ function styleMailleAtlas(nb) {
         weight: 1,
         color: configuration.COULEUR_CONTOUR_MAILLE,
         fillColor: getColor(nb),
-        fillOpacity: 0.7,
+        fillOpacity: 0.8,
     };
 }
 
@@ -882,8 +883,6 @@ function generateSliderOnMap() {
         step: configuration.MAP.STEP,
     });
 
-    document.getElementById("yearMax").innerHTML =
-        "&nbsp;&nbsp;&nbsp;&nbsp;" + YEARMAX;
-    document.getElementById("yearMin").innerHTML =
-        taxonYearMin + "&nbsp;&nbsp;&nbsp;&nbsp";
+    document.getElementById("yearMax").innerText = YEARMAX;
+    document.getElementById("yearMin").innerText = taxonYearMin;
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-17 10:06+0200\n"
+"POT-Creation-Date: 2026-09-22 17:38+0200\n"
 "PO-Revision-Date: 2021-07-19 09:53+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -18,24 +18,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: atlas/atlasRoutes.py:426
+#: atlas/atlasRoutes.py:428
 msgid "static pages"
 msgstr "Pagine statiche"
 
-#: atlas/atlasRoutes.py:428
+#: atlas/atlasRoutes.py:430
 msgid "home page"
 msgstr "Partner"
 
-#: atlas/atlasRoutes.py:429 atlas/templates/core/sideBar.html:110
+#: atlas/atlasRoutes.py:431 atlas/templates/core/sideBar.html:110
 #: atlas/templates/home/globalStats.html:67
 msgid "photos"
 msgstr "foto"
 
-#: atlas/atlasRoutes.py:433
+#: atlas/atlasRoutes.py:435
 msgid "zoning pages"
 msgstr ""
 
-#: atlas/atlasRoutes.py:436
+#: atlas/atlasRoutes.py:438
 msgid "species sheet by groups"
 msgstr "Foglio delle specie per gruppi"
 
@@ -232,6 +232,7 @@ msgstr "per gruppo tassonomico"
 #: atlas/templates/home/taxoRank.html:37
 #: atlas/templates/organismSheet/statsInfos.html:15
 #: atlas/templates/organismSheet/topSpecies.html:44
+#: atlas/templates/speciesSheet/charts.html:19
 #: atlas/templates/speciesSheet/identityCard.html:127
 #: atlas/templates/speciesSheet/map.html:15
 #: atlas/templates/speciesSheet/otherInformations.html:129
@@ -572,14 +573,28 @@ msgid "no.synonym.for.this.taxon"
 msgstr "Nessun sinonimo per questo taxon"
 
 #: atlas/templates/speciesSheet/charts.html:5
-msgid "alt.classes.obs"
-msgstr "Osservazioni per classi di altitudine"
-
-#: atlas/templates/speciesSheet/charts.html:16
 msgid "monthly.obs"
 msgstr "Osservazioni mensili"
 
-#: atlas/templates/speciesSheet/charts.html:27
+#: atlas/templates/speciesSheet/charts.html:33
+#, fuzzy
+msgid "observations_per_life_stage"
+msgstr "Osservazioni e specie"
+
+#: atlas/templates/speciesSheet/charts.html:48
+#, fuzzy
+msgid "benthos.species.obs_graph"
+msgstr "Nuove species scoperte"
+
+#: atlas/templates/speciesSheet/charts.html:59
+msgid "benthos.species.obs_life_stage_graph"
+msgstr ""
+
+#: atlas/templates/speciesSheet/charts.html:69
+msgid "alt.classes.obs"
+msgstr "Osservazioni per classi di altitudine"
+
+#: atlas/templates/speciesSheet/charts.html:80
 msgid "data.source"
 msgstr "Provenienza dei dati"
 

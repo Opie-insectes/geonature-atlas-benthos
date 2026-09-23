@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-17 10:06+0200\n"
+"POT-Creation-Date: 2026-09-22 17:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,24 +17,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: atlas/atlasRoutes.py:426
+#: atlas/atlasRoutes.py:428
 msgid "static pages"
 msgstr ""
 
-#: atlas/atlasRoutes.py:428
+#: atlas/atlasRoutes.py:430
 msgid "home page"
 msgstr ""
 
-#: atlas/atlasRoutes.py:429 atlas/templates/core/sideBar.html:110
+#: atlas/atlasRoutes.py:431 atlas/templates/core/sideBar.html:110
 #: atlas/templates/home/globalStats.html:67
 msgid "photos"
 msgstr ""
 
-#: atlas/atlasRoutes.py:433
+#: atlas/atlasRoutes.py:435
 msgid "zoning pages"
 msgstr ""
 
-#: atlas/atlasRoutes.py:436
+#: atlas/atlasRoutes.py:438
 msgid "species sheet by groups"
 msgstr ""
 
@@ -221,6 +221,7 @@ msgstr ""
 #: atlas/templates/home/taxoRank.html:37
 #: atlas/templates/organismSheet/statsInfos.html:15
 #: atlas/templates/organismSheet/topSpecies.html:44
+#: atlas/templates/speciesSheet/charts.html:19
 #: atlas/templates/speciesSheet/identityCard.html:127
 #: atlas/templates/speciesSheet/map.html:15
 #: atlas/templates/speciesSheet/otherInformations.html:129
@@ -550,14 +551,26 @@ msgid "no.synonym.for.this.taxon"
 msgstr ""
 
 #: atlas/templates/speciesSheet/charts.html:5
-msgid "alt.classes.obs"
-msgstr ""
-
-#: atlas/templates/speciesSheet/charts.html:16
 msgid "monthly.obs"
 msgstr ""
 
-#: atlas/templates/speciesSheet/charts.html:27
+#: atlas/templates/speciesSheet/charts.html:33
+msgid "observations_per_life_stage"
+msgstr ""
+
+#: atlas/templates/speciesSheet/charts.html:48
+msgid "benthos.species.obs_graph"
+msgstr ""
+
+#: atlas/templates/speciesSheet/charts.html:59
+msgid "benthos.species.obs_life_stage_graph"
+msgstr ""
+
+#: atlas/templates/speciesSheet/charts.html:69
+msgid "alt.classes.obs"
+msgstr ""
+
+#: atlas/templates/speciesSheet/charts.html:80
 msgid "data.source"
 msgstr ""
 

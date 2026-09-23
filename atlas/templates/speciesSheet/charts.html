@@ -1,4 +1,68 @@
 {% block charts %}
+    {% if configuration.AFFICHAGE_GRAPH_PHENOLOGIE %}
+        <div class="card mt-4 graph-block">
+            <div class="card-body p-2">
+                <h4 class="title-bar title-spaced text-center fw-bold">{{ _('monthly.obs') }}</h4>
+            </div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link active"
+                        id="tab-observations"
+                        data-bs-toggle="tab"
+                        data-bs-target="#tab-content-observations"
+                        type="button"
+                        role="tab"
+                        aria-controls="tab-observations"
+                        aria-selected="true"
+                    >
+                        {{ _('observations') }}
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link"
+                        id="tab-obs-life-stages"
+                        data-bs-toggle="tab"
+                        data-bs-target="#tab-content-obs-life-stages"
+                        type="button"
+                        role="tab"
+                        aria-controls="tab-obs-life-stages"
+                        aria-selected="false"
+                    >
+                        {{ _('benthos.species.obs_per_life_stage') }}
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div
+                    id="tab-content-observations"
+                    class="tab-pane fade show active"
+                    role="tabpanel"
+                    aria-labelledby="tab-observations"
+                >
+                    <div class="chart-container" style="position: relative; height:200px; width:100%">
+                        <canvas id="monthObsChart"></canvas>
+                    </div>
+                    <p class="text-center text-muted small">{{ _('benthos.species.obs_graph') }}</p>
+                </div>
+                <div
+                    id="tab-content-obs-life-stages"
+                    class="tab-pane fade"
+                    role="tabpanel"
+                    aria-labelledby="tab-obs-life-stages"
+                >
+                    <div class="chart-container" style="position: relative; height:200px; width:100%">
+                        <canvas id="monthLifeStagesChart"></canvas>
+                    </div>
+                    <p class="text-center text-muted small">{{ _('benthos.species.obs_life_stage_graph') }}</p>
+                </div>
+            </div>
+
+        </div>
+    {% endif %}
+
     {% if configuration.AFFICHAGE_GRAPH_ALTITUDES %}
         <div class="card mt-4 graph-block">
             <div class="card-body p-2">
@@ -10,17 +74,6 @@
         </div>
     {% endif %}
 
-    {% if configuration.AFFICHAGE_GRAPH_PHENOLOGIE %}
-        <div class="card mt-4 graph-block">
-            <div class="card-body p-2">
-                <h4 class="title-bar title-spaced text-center fw-bold">{{ _('monthly.obs') }}</h4>
-            </div>
-            <div class="chart-container" style="position: relative; height:200px; width:100%">
-                <canvas id="monthChart"></canvas>
-            </div>
-        </div>
-    {% endif %}
-    
     {% if configuration.ORGANISM_MODULE %}
         <div class="card mt-4 graph-block">
             <div class="card-body p-2">

@@ -643,7 +643,7 @@ msgstr "Organisme"
 
 #: atlas/templates/speciesSheet/map.html:44
 msgid "first_and_last_obs"
-msgstr "Étendue des observations"
+msgstr "sur la période"
 
 #: atlas/templates/speciesSheet/otherInformations.html:40
 msgid "title"

@@ -12,9 +12,10 @@
             <strong>{{ _('species.infos') }}</strong>
         </h4>
 
+
         <!-- Onglets -->
         <ul class="nav nav-tabs" role="tablist">
-            {% for desc in taxonAttrs %}
+            {% for desc in taxonAttrs if desc.code in configuration.ATTRIBUTS_ONGLET_BLOC_INFOS %}
                 <li class="nav-item" role="presentation">
                     <button
                         class="nav-link {% if loop.index == 1 %}active{% endif %}"
@@ -48,7 +49,7 @@
 
         <!-- Contenu des onglets -->
         <div id="tab-taxhub-attr" class="tab-content">
-            {% for desc in taxonAttrs %}
+            {% for desc in taxonAttrs if desc.code in configuration.ATTRIBUTS_ONGLET_BLOC_INFOS %}
                 <div
                     id="{{desc.code}}"
                     class="tab-pane fade {% if loop.index == 1 %}show active{% endif %} taxhub-attr"
@@ -72,14 +73,13 @@
                 {% if synonyme | length == 1 %}
                     {{ _('no.synonym.for.this.taxon') }}
                 {% else %}
+                    <ul>
                     {% for syn in synonyme %}
                         {% if not syn.lb_nom == taxon.taxonSearch.lb_nom %}
-                            {{ syn.nom_complet_html | safe }}
-                        {% endif %}
-                        {% if ( (not loop.last) and (not syn.lb_nom == taxon.taxonSearch.lb_nom) ) %}
-                            |
+                            <li>{{ syn.nom_complet_html | safe }}</li>
                         {% endif %}
                     {% endfor %}
+                    </ul>
                 {% endif %}
             </div>
         </div>

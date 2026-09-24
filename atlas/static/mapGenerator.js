@@ -847,34 +847,12 @@ function styleMailleClickedOrHover(layer) {
 }
 
 // eslint-disable-next-line no-unused-vars
-var mySlider;
+var mySlider = undefined;
 
 // eslint-disable-next-line no-unused-vars
 function generateSliderOnMap() {
     // Vérifie si le slider existe déjà
-    if (document.getElementById("sliderContainer")) return;
-
-    // Crée le conteneur du slider
-    var sliderContainer = document.createElement("div");
-    sliderContainer.id = "sliderContainer";
-    sliderContainer.className = "slider-bottom-center";
-    sliderContainer.style.backgroundColor = "white";
-    sliderContainer.style.width = "350px";
-    sliderContainer.style.height = "70px";
-    sliderContainer.style.border = "solid white 1px";
-    sliderContainer.style.cursor = "pointer";
-    sliderContainer.style.textAlign = "center";
-    sliderContainer.innerHTML =
-        "<p> <span id='yearMin'> </span> <input id='sliderControl' type='text'/> <span id='yearMax'>  </span>  </p>" +
-        "<p id='nbObs'> Nombre d'observation(s): " +
-        nb_obs +
-        " </p>";
-
-    // Ajoute le slider dans le conteneur principal de la carte
-    var mapContainer =
-        document.getElementById("mapContainer") ||
-        document.getElementById("map").parentNode;
-    mapContainer.appendChild(sliderContainer);
+    if (mySlider !== undefined) return;
 
     mySlider = new Slider("#sliderControl", {
         value: [taxonYearMin, YEARMAX],

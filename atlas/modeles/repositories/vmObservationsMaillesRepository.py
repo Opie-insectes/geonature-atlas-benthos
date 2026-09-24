@@ -2,12 +2,14 @@ import json
 from datetime import datetime
 
 from geojson import Feature, FeatureCollection
-from sqlalchemy.sql import text, func, any_, extract, literal, cast, select, exists, true
-from sqlalchemy import Interval
+from sqlalchemy.sql import text, func, any_, extract, literal, cast, select, exists, true, or_
+from sqlalchemy import Interval, distinct
 
 from atlas.modeles.entities.vmObservations import (
     VmObservations,
+    VmObservationsGrp,
     VMCorMailleObservation,
+    VMCorMailleObservationGrp,
 )
 from atlas.modeles.entities.vmAreas import VmAreas, VmCorAreaSynthese
 from atlas.modeles.entities.vmTaxons import VmTaxons
@@ -131,3 +133,23 @@ def getObservationsMaillesChilds(params={}):
             for o in db.session.execute(query).all()
         ]
     )
+
+
+def countObservationsMaillesChilds(cd_ref):
+    """
+    Compte le nombre de maille où ce taxon et les taxons inférieurs ont été observés.
+    """
+    query = (
+        select(func.count(distinct(VMCorMailleObservationGrp.id_maille)))
+        .join(
+            VmObservationsGrp,
+            VmObservationsGrp.uuid_observation == VMCorMailleObservationGrp.uuid_observation,
+        )
+        .where(
+            or_(
+                VmObservationsGrp.cd_ref == cd_ref,
+                VmObservationsGrp.cd_ref.in_(func.atlas.find_all_taxons_childs(cd_ref))
+            )
+        )
+    )
+    return db.session.execute(query).scalar_one()

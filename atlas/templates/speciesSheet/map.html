@@ -1,51 +1,50 @@
 {% block mapCard %}
 <div class="card mt-4" id="mapPanel">
-    <div class="row g-0">
-        <div class="col-sm-10" id="mapContainer">
-            <div id="map">
-                {% include 'templates/core/loaderSpinner.html' %}
-            </div>
+    <h4 class="title-bar text-center">
+        <strong>Cartes de répartition</strong>
+    </h4>
+
+    <div id="mapStat">
+        <div>
+            <i class="fas fa-search"></i>
+            <b>{{ taxon.taxonSearch.nb_obs | pretty }}</b>&nbsp;
+            {{- _('observations')|lower if taxon.taxonSearch.nb_obs > 1 else _('observation')|lower }}
+            {{ _('first_and_last_obs') }}
+            <b>{{ taxon.taxonSearch.yearmin|int }}&hairsp;&ndash;&hairsp;{{ taxon.taxonSearch.yearmax|int }}</b>
         </div>
-        <div class="col-sm-2" id="mapStat">
-            <ul>
-                <li>
-                    <i class="fas fa-search fa-2x"></i> <br/>
-                    <b>{{ taxon.taxonSearch.nb_obs | pretty }}</b><br/>
-                    <span style="font-size: 0.90rem">
-                        {{ _('observations')|lower if taxon.taxonSearch.nb_obs > 1 else _('observation')|lower }}
-                    </span>
-                </li>
-
-                <li>
-                    <i class="fas fa-map-signs fa-2x"></i> <br/>
-                    <b>{{ areas['length']|pretty }}</b><br/>
-                    <span style="font-size: 0.90rem">
-                        département{{ "s" if areas['length'] > 1 else "" }}
-                    </span>
-                </li>
-
-                <li>
-                    <i class="fas fa-users fa-2x"></i> <br/>
-                    <b>{{ observers|length|pretty }}</b><br/>
-                    <span style="font-size: 0.90rem">
-                        {{ _('observers')|lower if observers|length > 1 else _('observer')|lower }}
-                    </span>
-                    {% if configuration.ORGANISM_MODULE %}
-                        <br/>
-                        <b>{{ organisms|length }}</b> <br/>
-                        <span style="font-size: 0.90rem">
-                            {{ _('organisms')|lower if organisms|length > 1 else _('organism')|lower }}
-                        </span>
-                    {% endif %}
-                </li>
-
-                <li id="lastObs" class="pointer">
-                    <i class="far fa-clock fa-2x"></i> <br/>
-                    <span style="font-size: 0.90rem">{{ _('first_and_last_obs') }}</span><br/>
-                    <b>{{ taxon.taxonSearch.yearmin|int }}&hairsp;&ndash;&hairsp;{{ taxon.taxonSearch.yearmax|int }}</b>
-                </li>
-            </ul>
+       
+        <div>
+            <i class="fas fa-map-signs"></i>
+            <b>{{ areas['length']|pretty }}</b>&nbsp;département{{ "s" if areas['length'] > 1 else "" }},
+            <b>{{ num_mailles }}</b>&nbsp;maille{{ "s" if num_mailles > 1 else "" }} 20&thinsp;km
+        </div>
+          
+        <div>
+            <i class="fas fa-users"></i>
+            <b>{{ observers|length|pretty }}</b>&nbsp;{{ _('observers')|lower if observers|length > 1 else _('observer')|lower }}
+            {%- if configuration.ORGANISM_MODULE -%},
+                <b>{{ organisms|length }}</b>&nbsp;{{ _('organisms')|lower if organisms|length > 1 else _('organism')|lower }}
+            {% endif %}
         </div>
     </div>
+
+    <div id="mapContainer">
+        <div id="map">
+            {% include 'templates/core/loaderSpinner.html' %}
+        </div>
+    </div>
+
+    <div id="sliderContainer">
+        <div id="sliderWidget">
+            <span id="yearMin">1900</span>
+            <input id="sliderControl" type="text">
+            <span id="yearMax">2026</span>
+        </div>
+
+        <div>
+            <span id="nbObs">{{ observations|length }}</span>&nbsp;observation·s affichée·s
+        </div>
+    </div>
+
 </div>
 {% endblock %}

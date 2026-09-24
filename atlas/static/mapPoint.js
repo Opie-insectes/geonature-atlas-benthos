@@ -33,6 +33,7 @@ var yearMax = null;
  * Affiche les données selon le contexte
  */
 function displayDataByZoomLevel() {
+    console.log('displayDataByZoomLevel');
     const isZoomedToPoints = map.getZoom() >= configuration.ZOOM_LEVEL_POINT;
     if (onlyPointLoaded || isZoomedToPoints) {
         clearObservationsFeatureGroup();
@@ -57,7 +58,7 @@ function displayDataByZoomLevel() {
         legendblock.removeAttr("hidden");
 
         // Mettre à jour le compteur
-        $("#nbObs").html("Nombre d'observation(s): " + nb_obs);
+        $("#nbObs").text(nb_obs);
     }
 }
 
@@ -80,6 +81,7 @@ function reloadMaillesWithYearFilter() {
     }).done(function (observations) {
         $("#loaderSpinner").hide();
         observationsMaille = observations;
+        setObservationCounter(observationsMaille);
         displayDataByZoomLevel();
     });
 }
@@ -98,8 +100,8 @@ function setupSlider() {
         yearMin = years[0];
         yearMax = years[1];
 
-        $("#yearMin").html(yearMin);
-        $("#yearMax").html(yearMax);
+        $("#yearMin").text(yearMin);
+        $("#yearMax").text(yearMax);
     });
 
     mySlider.on("slideStop", function () {
@@ -161,6 +163,7 @@ if (nb_obs <= configuration.LIMIT_POINT_MAILLE) {
         $("#loaderSpinner").hide();
         observationsPoint = observations;
         displayDataByZoomLevel();
+        setObservationCounter(observationsMaille);
         eventOnZoom();
         setupSlider();
     });
@@ -183,6 +186,7 @@ if (nb_obs <= configuration.LIMIT_POINT_MAILLE) {
 
         // Afficher les mailles
         displayGeojsonMailles(observationsMaille, onEachFeatureMaille);
+        setObservationCounter(observationsMaille);
 
         $("#loaderSpinner").hide();
 
@@ -217,4 +221,13 @@ function eventOnZoom() {
             activeMode = "Maille";
         }
     });
+}
+
+function setObservationCounter(observations) {
+    nb_obs = observations.features.reduce(
+        (sum, feature) => sum + feature.properties.nb_observations,
+        0
+    );
+
+    $("#nbObs").text(nb_obs);
 }

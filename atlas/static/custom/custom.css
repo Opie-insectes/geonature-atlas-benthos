@@ -37,13 +37,15 @@ body > footer {
         margin: 0.5em;
         line-height: 1em;
     }
+}
 
-    .modal-header {
-        padding: var(--bs-modal-header-padding);
+/* ELEMENTS */
 
-        h3 {
-            margin-bottom: 0;
-        }
+.modal-header {
+    padding: var(--bs-modal-header-padding);
+
+    h3 {
+        margin-bottom: 0;
     }
 }
 
@@ -57,7 +59,7 @@ body[page-name="index"] {
 
 body[page-name="ficheEspece"] {
     #taxonIdentity, #otherInformations, #blocInfos, .graph-block {
-        padding: 1em;
+        padding: 1rem;
     }
 
     div.imgWrapper {
@@ -78,23 +80,45 @@ body[page-name="ficheEspece"] {
         padding: 0.25em 1em;
     }
 
-    .carousel-indicators {
-        top: 0;
-        margin-bottom: 0;
-    }
+    #photoCarousel {
+        overflow: hidden;
 
-    .carousel-inner {
-        cursor: zoom-in;
+        .carousel-indicators {
+            top: 0;
+            margin-bottom: 0;
+        }
 
-        .carousel-caption {
-            bottom: 0;
-            padding: 0.25em 1em;
-            background-color: rgba(0, 0, 0, 0.66);
-            backdrop-filter: blur(3px);
+        .carousel-inner {
+            cursor: zoom-in;
+
+            .carousel-caption {
+                bottom: 0;
+                padding: 0.25em 1em;
+                background-color: rgba(0, 0, 0, 0.66);
+                backdrop-filter: blur(3px);
+            }
         }
     }
 
+    #mapPanel {
+        padding-top: 1rem;
+    }
+
+    #mapStat {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 0.5rem;
+        padding: 0 0 0.5rem 1rem;
+        font-size: 0.9em;
+    }
+
     #mapContainer {
+        /* Unset bad bottom margin. */
+        .leaflet-bottom.leaflet-left {
+            margin-bottom: unset;
+        }
+
         /* Detach a bit the link to species page. */
         .leaflet-popup-content a:last-of-type {
             display: inline-block;
@@ -106,8 +130,7 @@ body[page-name="ficheEspece"] {
         .leaflet-bar.leaflet-control > a,
         .leaflet-control-custom,
         .leaflet-control-attribution,
-        .leaflet-control-scale,
-        #sliderContainer {
+        .leaflet-control-scale {
             /* We require something a bit stronger than what Bootstrap provides. */
             box-shadow: rgba(0, 0, 0, 0.33) 0px 3px 8px;
         }
@@ -116,16 +139,38 @@ body[page-name="ficheEspece"] {
             line-height: unset;
         }
 
-        /* Fix the slider + min/max years styling to not use filthy nbsps. */
-        #sliderContainer p:first-child {
-            display: flex;
-            flex-wrap: nowrap;
-            gap: 1em;
-        }
-
         .greyscale-tiles .leaflet-tile {
             filter: grayscale(100%);
             filter: gray;
         }
+    }
+
+    /* Fix the year double slider. */
+    #sliderContainer {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: start;
+
+        position: static;
+        bottom: unset;
+        left: unset;
+        z-index: unset;
+        transform: unset;
+        width: 100%;
+        background-color: unset;
+        border: unset;
+        padding: 0.5rem 1rem;
+    }
+
+    /* Use propre rules for min/max years styling instead of filthy nbsps */
+    #sliderWidget {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 1em;
+    }
+
+    #synonymes ul li {
+        list-style: '= ';
     }
 }

@@ -172,7 +172,7 @@ def index():
     )
 
 
-@main.route("/espece/<int(signed=True):cd_nom>", methods=["GET", "POST"])
+@main.route("/taxon/<int(signed=True):cd_nom>", methods=["GET", "POST"])
 def ficheEspece(cd_nom):
     # Get cd_ref from cd_nom
     cd_ref = vmTaxrefRepository.get_cd_ref(cd_nom)
@@ -191,6 +191,7 @@ def ficheEspece(cd_nom):
         organism_stats = vmCorTaxonOrganismRepository.getTaxonOrganism(cd_ref)
     synonyme = vmTaxrefRepository.getSynonymy(cd_ref)
     areas = vmAreasRepository.getAreasByTaxon(cd_ref)
+    num_mailles = vmObservationsMaillesRepository.countObservationsMaillesChilds(cd_ref)
     taxonomyHierarchy = vmTaxrefRepository.getAllTaxonomy(cd_ref)
     firstPhoto = vmMedias.getFirstPhoto(cd_ref, current_app.config["ATTR_MAIN_PHOTO"])
     photoCarousel = vmMedias.getPhotoCarousel(cd_ref, current_app.config["ATTR_OTHER_PHOTO"])
@@ -241,6 +242,7 @@ def ficheEspece(cd_nom):
         organism_stats=organism_stats,
         synonyme=synonyme,
         areas=areas,
+        num_mailles=num_mailles,
         taxonomyHierarchy=taxonomyHierarchy,
         firstPhoto=firstPhoto,
         photoCarousel=photoCarousel,

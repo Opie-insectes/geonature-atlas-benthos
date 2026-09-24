@@ -276,6 +276,10 @@ class AtlasConfig(Schema):
             "atlas_chorologie",
         ],
     )
+    ATTRIBUTS_ONGLET_BLOC_INFOS = fields.List(
+        fields.String(),
+        load_default=[],
+    )
     ATTR_MAIN_PHOTO = fields.Integer(load_default=1)
     ATTR_OTHER_PHOTO = fields.Integer(load_default=2)
     ATTR_LIEN = fields.Integer(load_default=3)

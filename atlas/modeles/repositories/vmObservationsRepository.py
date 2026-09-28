@@ -10,7 +10,7 @@ from sqlalchemy.orm import joinedload, load_only, raiseload
 
 from atlas.modeles import utils
 from atlas.modeles.repositories.vmMedias import VmMedias
-from atlas.modeles.entities.vmObservations import VmObservations
+from atlas.modeles.entities.vmObservations import VmObservationsGrp
 from atlas.modeles.entities.vmTaxons import VmTaxons
 from atlas.modeles.entities.vmTaxref import VmTaxref
 from atlas.modeles.entities.vmAreas import VmCorAreaSynthese, VmAreasWithObs
@@ -48,21 +48,22 @@ def getObservationsChilds(params: {}):
     fields: list = params.get("fields", "").split(",")
 
     # Charger l'entité ORM mais seulement les colonnes nécessaires (optimisation perf)
-    query = select(VmObservations)
+    query = select(VmObservationsGrp)
     if "taxons" in fields:
-        _joinedload = joinedload(VmObservations.taxon)
+        _joinedload = joinedload(VmObservationsGrp.taxon)
         if "medias" in fields:
             _joinedload = _joinedload.joinedload(VmTaxons.main_media)
         query = query.options(_joinedload)
     query = query.options(
         load_only(
-            VmObservations.id_observation,
-            VmObservations.dateobs,
-            VmObservations.observateurs,
-            VmObservations.altitude_retenue,
-            VmObservations.cd_ref,
-            VmObservations.cd_sensitivity,
-            VmObservations.geojson_point,
+            VmObservationsGrp.uuid_observation,
+            VmObservationsGrp.date_min,
+            VmObservationsGrp.date_max,
+            VmObservationsGrp.observateurs,
+            VmObservationsGrp.altitude_retenue,
+            VmObservationsGrp.cd_ref,
+            VmObservationsGrp.cd_sensitivity,
+            VmObservationsGrp.geojson_point,
         )
     )
     query = query.options(raiseload("*"))
@@ -70,8 +71,8 @@ def getObservationsChilds(params: {}):
         subquery = select(func.atlas.find_all_taxons_childs(cd_ref))
         query = query.filter(
             or_(
-                VmObservations.cd_ref.in_(subquery),
-                VmObservations.cd_ref == cd_ref,
+                VmObservationsGrp.cd_ref.in_(subquery),
+                VmObservationsGrp.cd_ref == cd_ref,
             )
         )
     if id_area:
@@ -81,14 +82,14 @@ def getObservationsChilds(params: {}):
                 .select_from(VmCorAreaSynthese)
                 .where(
                     (VmCorAreaSynthese.id_area == params["id_area"])
-                    & (VmCorAreaSynthese.id_synthese == VmObservations.id_observation)
+                    & (VmCorAreaSynthese.uuid_observation == VmObservationsGrp.uuid_observation)
                     & (VmCorAreaSynthese.is_valid_for_display.is_(True))
                 )
             )
         )
     if last_obs:
         query = query.where(
-            VmObservations.dateobs >= func.current_timestamp() - cast(literal(last_obs), Interval)
+            VmObservationsGrp.date_min >= func.current_timestamp() - cast(literal(last_obs), Interval)
         )
     if limit:
         query = query.limit(limit)
@@ -97,7 +98,7 @@ def getObservationsChilds(params: {}):
 
     # Exécuter la requête
     observations = (
-        db.session.execute(query.order_by(VmObservations.dateobs.desc())).scalars().all()
+        db.session.execute(query.order_by(VmObservationsGrp.date_max.desc())).scalars().all()
     )
 
     # Construire le GeoJSON
@@ -119,7 +120,7 @@ def getObservationsChilds(params: {}):
 
         feature = {
             "type": "Feature",
-            "id": observation_as_dict["id_observation"],
+            "id": observation_as_dict["uuid_observation"],
             "geometry": geom,
             "properties": observation_as_dict,
         }
@@ -160,8 +161,8 @@ def getObservers(cd_ref):
     )
     taxons = [cd_ref] + childs_ids
 
-    req = select(distinct(VmObservations.observateurs).label("observateurs")).filter(
-        VmObservations.cd_ref == func.any(array(taxons))
+    req = select(distinct(VmObservationsGrp.observateurs).label("observateurs")).filter(
+        VmObservationsGrp.cd_ref == func.any(array(taxons))
     )
     results = db.session.execute(req).all()
     return observersParser(results)
@@ -169,8 +170,8 @@ def getObservers(cd_ref):
 
 def getGroupeObservers(groupe):
     subquery = select(VmTaxons.cd_ref).filter(VmTaxons.group2_inpn == groupe)
-    req = select(distinct(VmObservations.observateurs).label("observateurs")).filter(
-        VmObservations.cd_ref.in_(subquery)
+    req = select(distinct(VmObservationsGrp.observateurs).label("observateurs")).filter(
+        VmObservationsGrp.cd_ref.in_(subquery)
     )
     results = db.session.execute(req).all()
     return observersParser(results)
@@ -178,8 +179,8 @@ def getGroupeObservers(groupe):
 
 def getObserversArea_bis(id_area):
     req = (
-        select(distinct(VmObservations.observateurs).label("observateurs"))
-        .join(VmCorAreaSynthese, VmCorAreaSynthese.id_synthese == VmObservations.id_observation)
+        select(distinct(VmObservationsGrp.observateurs).label("observateurs"))
+        .join(VmCorAreaSynthese, VmCorAreaSynthese.id_synthese == VmObservationsGrp.id_observation)
         .filter(VmCorAreaSynthese.id_area == id_area)
     )
     results = db.session.execute(req).all()
@@ -188,7 +189,7 @@ def getObserversArea_bis(id_area):
 
 def statIndex():
     result = {"nbTotalObs": None, "nbTotalTaxons": None, "town": None, "photo": None}
-    req = select(func.count(VmObservations.id_observation).label("count"))
+    req = select(func.count(VmObservationsGrp.uuid_observation).label("count"))
     results = db.session.execute(req).all()
     for r in results:
         result["nbTotalObs"] = r.count
@@ -227,10 +228,10 @@ def genericStat(tab):
         colonne_rang = getattr(VmTaxons, rang)
         req = (
             select(
-                func.count(distinct(VmObservations.id_observation)).label("nb_obs"),
+                func.count(distinct(VmObservationsGrp.id_observation)).label("nb_obs"),
                 func.count(distinct(VmTaxons.cd_ref)).label("nb_taxons"),
             )
-            .join(VmObservations, VmObservations.cd_ref == VmTaxons.cd_ref)
+            .join(VmObservationsGrp, VmObservationsGrp.cd_ref == VmTaxons.cd_ref)
             .filter(colonne_rang.in_(nomTaxon))
         )
         results = db.session.execute(req).all()
@@ -289,9 +290,9 @@ def genericStatMedias(tab):
 def getLastDiscoveries():
     id_type = current_app.config["ATTR_MAIN_PHOTO"]
     subreq = (
-        select(func.date(func.min(VmObservations.dateobs)).label("date"), VmObservations.cd_ref)
-        .group_by(VmObservations.cd_ref)
-        .order_by(func.date(func.min(VmObservations.dateobs)).desc())
+        select(func.date(func.min(VmObservationsGrp.date_max)).label("date"), VmObservationsGrp.cd_ref)
+        .group_by(VmObservationsGrp.cd_ref)
+        .order_by(func.date(func.min(VmObservationsGrp.date_max)).desc())
         .subquery("t")
     )
     req = (

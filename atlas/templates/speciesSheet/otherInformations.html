@@ -5,20 +5,20 @@
             {% if articles | length != 0 %}
                 <li class="nav-item">
                     <a data-bs-toggle="tab" class="nav-link active " href="#articles">
-                        <b>{{ articles|length }}</b> {{ 'articles' if articles|length > 1 else 'article' }}
+                        {{ articles|length }}&nbsp;{{ 'articles' if articles|length > 1 else 'article' }}
                     </a>
                 </li>
             {% endif %}
                 <li class="nav-item">
                     <a data-bs-toggle="tab" class="nav-link {% if articles | length == 0 %}  active {% endif %}" href="#area">
-                        <b>{{ areas['length'] }}</b> département{{ "s" if areas['length'] > 1 else "" }}
+                        {{ areas['length'] }}&nbsp;département{{ "s" if areas['length'] > 1 else "" }}
                     </a>
                 </li>
 
             {% if configuration.ORGANISM_MODULE %}
                 <li class="nav-item" data-qa="organism-module-tab">
                     <a class="nav-link" data-bs-toggle="tab" href="#organisms">
-                        <b>{{ organisms|length }}</b> {{ _('organisms')|lower if organisms|length > 1 else _('organism')|lower }}
+                        {{ organisms|length }}&nbsp;{{ _('organisms')|lower if organisms|length > 1 else _('organism')|lower }}
                     </a>
                 </li>
             {% endif %}
@@ -26,7 +26,7 @@
             {% if configuration.DISPLAY_OBSERVERS %}
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="tab" href="#observateurs">
-                        <b>{{ observers|length }}</b> {{ _('observers')|lower if observers|length > 1 else _('observer')|lower }}
+                        {{ observers|length }}&nbsp;{{ _('observers')|lower if observers|length > 1 else _('observer')|lower }}
                     </a>
                 </li>
             {% endif %}

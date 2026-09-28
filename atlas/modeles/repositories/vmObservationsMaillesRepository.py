@@ -2,22 +2,15 @@ import json
 from datetime import datetime
 
 from geojson import Feature, FeatureCollection
-from sqlalchemy.sql import text, func, any_, extract, literal, cast, select, exists, true, or_
+from sqlalchemy.sql import func, any_, literal, cast, select, exists, true, or_
 from sqlalchemy import Interval, distinct
 
 from atlas.modeles.entities.vmObservations import (
-    VmObservations,
     VmObservationsGrp,
-    VMCorMailleObservation,
     VMCorMailleObservationGrp,
 )
 from atlas.modeles.entities.vmAreas import VmAreas, VmCorAreaSynthese
-from atlas.modeles.entities.vmTaxons import VmTaxons
-from atlas.modeles.entities.vmMedias import VmMedias
-from atlas.modeles.utils import deleteAccent, findPath
-from atlas.app import create_app
 from atlas.env import db
-from flask import current_app
 
 
 def format_taxon_name(observation):
@@ -67,38 +60,36 @@ def getObservationsMaillesChilds(params={}):
         taxons_ids.append(int(params["cd_ref"]))
 
     query_select = [
-        VMCorMailleObservation.id_maille,
+        VMCorMailleObservationGrp.id_maille,
         VmAreas.area_geojson,
-        VMCorMailleObservation.type_code,
-        VmObservations.cd_sensitivity,
-        func.max(func.date_part("year", VmObservations.dateobs)).label("last_obs_year"),
-        func.count(VmObservations.id_observation).label("obs_nbr"),
+        VMCorMailleObservationGrp.type_code,
+        VmObservationsGrp.cd_sensitivity,
+        func.max(func.date_part("year", VmObservationsGrp.date_max)).label("last_obs_year"),
+        func.count(VmObservationsGrp.uuid_observation).label("obs_nbr"),
     ]
-    if "ids_obs" in fields:
-        query_select.append(func.array_agg(VmObservations.id_observation).label("ids_obs"))
+    if True or "ids_obs" in fields:
+        query_select.append(func.array_agg(VmObservationsGrp.uuid_observation).label("ids_obs"))
     query = (
         select(*query_select)
-        .select_from(VmObservations)
+        .select_from(VmObservationsGrp)
         .join(
-            VMCorMailleObservation,
-            VMCorMailleObservation.id_observation == VmObservations.id_observation,
+            VMCorMailleObservationGrp,
+            VMCorMailleObservationGrp.uuid_observation == VmObservationsGrp.uuid_observation,
         )
-        .join(VmAreas, VmAreas.id_area == VMCorMailleObservation.id_maille)
+        .join(VmAreas, VmAreas.id_area == VMCorMailleObservationGrp.id_maille)
         .group_by(
-            VMCorMailleObservation.id_maille,
+            VMCorMailleObservationGrp.id_maille,
             VmAreas.area_geojson,
-            VMCorMailleObservation.type_code,
-            VmObservations.cd_sensitivity,
+            VMCorMailleObservationGrp.type_code,
+            VmObservationsGrp.cd_sensitivity,
         )
     )
     if taxons_ids:
-        query = query.where(VmObservations.cd_ref == any_(taxons_ids))
+        query = query.where(VmObservationsGrp.cd_ref == any_(taxons_ids))
     if year_min and year_max:
         query = query.where(
-            VmObservations.dateobs.between(
-                datetime(int(year_min), 1, 1),
-                datetime(int(year_max), 12, 31),
-            )
+            (VmObservationsGrp.date_min >= datetime(int(year_min), 1, 1))
+            & (VmObservationsGrp.date_max <= datetime(int(year_max), 12, 31))
         )
     if id_area:
         query = query.where(
@@ -107,13 +98,13 @@ def getObservationsMaillesChilds(params={}):
                 .select_from(VmCorAreaSynthese)
                 .where(
                     (VmCorAreaSynthese.id_area == id_area)
-                    & (VmCorAreaSynthese.id_synthese == VmObservations.id_observation)
+                    & (VmCorAreaSynthese.uuid_observation == VmObservationsGrp.uuid_observation)
                 )
             )
         )
     if last_obs:
         query = query.where(
-            VmObservations.dateobs >= func.current_timestamp() - cast(literal(last_obs), Interval)
+            VmObservationsGrp.date_min >= func.current_timestamp() - cast(literal(last_obs), Interval)
         )
 
     return FeatureCollection(
@@ -127,7 +118,7 @@ def getObservationsMaillesChilds(params={}):
                     "cd_sensitivity": o.cd_sensitivity,
                     "nb_observations": int(o.obs_nbr),
                     "last_observation": o.last_obs_year,
-                    "ids_obs": o.ids_obs if "ids_obs" in fields else None,
+                    "ids_obs": o.ids_obs# if "ids_obs" in fields else None,
                 },
             )
             for o in db.session.execute(query).all()

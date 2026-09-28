@@ -40,21 +40,28 @@ function clearObservationsFeatureGroup() {
 
 function generateObservationPopup(feature) {
     // Génération popup des observations
-    popupContent = `
-        <b>Date&nbsp;: </b> ${feature.properties.dateobs.replaceAll("-", "/")}
-        </br><b>Altitude&nbsp;: </b> ${feature.properties.altitude_retenue}
-        ${observersTxt(feature)} </br>
-        <a href='${window.LANGUAGE_PREFIXED_URL_APPLICATION}/espece/${feature.properties.cd_ref}'> Fiche espèce </a>
-    `;
-
-    // Vérifie si le champ effectif est rempli.
-    if (feature.properties.effectif_total !== undefined) {
-        popupContent = `${popupContent} </br><b>Effectif: </b>${feature.properties.effectif_total}`;
-    }
-
+    popupContent = '';
     // S'il faut lier à une fiche espèce.
     if (feature.properties.taxon) {
-        popupContent = `<b>Espèce&nbsp;: </b> ${feature.properties.taxon} </br> ${popupContent} </br>`;
+        popupContent = `<b>Espèce&nbsp;: </b> ${feature.properties.taxon} <br>`;
+    }
+    
+    popupContent += `
+        <b>Date&nbsp;: </b> ${feature.properties.date_min.replaceAll("-", "/")} <br>
+        <b>Altitude&nbsp;: </b> ${feature.properties.altitude_retenue}
+        ${observersTxt(feature)} <br>
+        <b>UUID&nbsp;: </b> ${feature.properties.uuid_observation}
+    `;
+
+    // Si on n'est pas déjà sur la fiche espèce concernée, on l'ajoute en lien.
+    speciesUrl = `${window.LANGUAGE_PREFIXED_URL_APPLICATION}/taxon/${feature.properties.cd_ref}`;
+    if (speciesUrl !== window.location.pathname) {
+        popupContent += ` <br> <a href='${speciesUrl}'> Fiche espèce </a>`;
+    }
+        
+    // Vérifie si le champ effectif est rempli.
+    if (feature.properties.effectif_total !== undefined) {
+        popupContent += ` <br> <b>Effectif: </b>${feature.properties.effectif_total}`;
     }
 
     return popupContent;

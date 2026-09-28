@@ -18,14 +18,6 @@
             <b>{{ areas['length']|pretty }}</b>&nbsp;département{{ "s" if areas['length'] > 1 else "" }},
             <b>{{ num_mailles }}</b>&nbsp;maille{{ "s" if num_mailles > 1 else "" }} 20&thinsp;km
         </div>
-          
-        <div>
-            <i class="fas fa-users"></i>
-            <b>{{ observers|length|pretty }}</b>&nbsp;{{ _('observers')|lower if observers|length > 1 else _('observer')|lower }}
-            {%- if configuration.ORGANISM_MODULE -%},
-                <b>{{ organisms|length }}</b>&nbsp;{{ _('organisms')|lower if organisms|length > 1 else _('organism')|lower }}
-            {% endif %}
-        </div>
     </div>
 
     <div id="mapContainer">

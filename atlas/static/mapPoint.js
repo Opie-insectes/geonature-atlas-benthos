@@ -33,7 +33,6 @@ var yearMax = null;
  * Affiche les données selon le contexte
  */
 function displayDataByZoomLevel() {
-    console.log('displayDataByZoomLevel');
     const isZoomedToPoints = map.getZoom() >= configuration.ZOOM_LEVEL_POINT;
     if (onlyPointLoaded || isZoomedToPoints) {
         clearObservationsFeatureGroup();
@@ -58,7 +57,7 @@ function displayDataByZoomLevel() {
         legendblock.removeAttr("hidden");
 
         // Mettre à jour le compteur
-        $("#nbObs").text(nb_obs);
+        setObservationCounter(observationsMaille);
     }
 }
 
@@ -69,19 +68,7 @@ function reloadMaillesWithYearFilter() {
     map.removeLayer(currentLayer);
 
     $("#loaderSpinner").show();
-    $.ajax({
-        url: configuration.URL_APPLICATION + "/api/observationsMaille",
-        dataType: "json",
-        type: "get",
-        data: {
-            cd_ref: cd_ref,
-            year_min: yearMin,
-            year_max: yearMax,
-        },
-    }).done(function (observations) {
-        $("#loaderSpinner").hide();
-        observationsMaille = observations;
-        setObservationCounter(observationsMaille);
+    loadMailles({year_min: yearMin, year_max: yearMax}, () => {
         displayDataByZoomLevel();
     });
 }
@@ -118,9 +105,6 @@ function setupSlider() {
     });
 }
 
-/**
- * Lance le chargement des points après les mailles
- */
 function loadPoints() {
     $.ajax({
         url: configuration.URL_APPLICATION + "/api/observationsPoint",
@@ -138,64 +122,46 @@ function loadPoints() {
 
         // Afficher les points
         displayDataByZoomLevel();
+        setObservationCounter(observationsMaille);
         eventOnZoom();
         setupSlider();
     });
 }
+
+function loadMailles(params, onSuccess = undefined) {
+    $.ajax({
+        url: configuration.URL_APPLICATION + "/api/observationsMaille",
+        dataType: "json",
+        type: "get",
+        data: { cd_ref: cd_ref, ...params },
+    }).done(function (observations) {
+        $("#loaderSpinner").hide();
+        observationsMaille = observations;
+        setObservationCounter(observationsMaille);
+        if (onSuccess !== undefined) {
+            onSuccess();
+        }
+    });
+}
+
+$("#loaderSpinner").show();
 
 // Vérifier le nombre d'observations et décider de la stratégie de chargement
 if (nb_obs <= configuration.LIMIT_POINT_MAILLE) {
     // nb_obs faible: charger UNIQUEMENT les points
     onlyPointLoaded = true;
     shouldDisplayMailles = false;
-
-    $.ajax({
-        url: configuration.URL_APPLICATION + "/api/observationsPoint",
-        dataType: "json",
-        type: "get",
-        data: {
-            cd_ref: cd_ref,
-        },
-        beforeSend: function () {
-            $("#loaderSpinner").show();
-        },
-    }).done(function (observations) {
-        $("#loaderSpinner").hide();
-        observationsPoint = observations;
-        displayDataByZoomLevel();
-        setObservationCounter(observationsMaille);
-        eventOnZoom();
-        setupSlider();
-    });
+    loadPoints();
 } else {
     // nb_obs élevé: charger d'abord les mailles, puis les points
     shouldDisplayMailles = true;
-
-    $.ajax({
-        url: configuration.URL_APPLICATION + "/api/observationsMaille",
-        dataType: "json",
-        type: "get",
-        data: {
-            cd_ref: cd_ref,
-        },
-        beforeSend: function () {
-            $("#loaderSpinner").show();
-        },
-    }).done(function (observations) {
-        observationsMaille = observations;
-
-        // Afficher les mailles
+    loadMailles({}, () => {
         displayGeojsonMailles(observationsMaille, onEachFeatureMaille);
-        setObservationCounter(observationsMaille);
-
-        $("#loaderSpinner").hide();
-
         // Bloquer le zoom pendant le chargement des points
         map.scrollWheelZoom.disable();
-
         // Charger les points en arrière-plan
         loadPoints();
-    });
+    })
 }
 
 function eventOnZoom() {
@@ -224,10 +190,11 @@ function eventOnZoom() {
 }
 
 function setObservationCounter(observations) {
-    nb_obs = observations.features.reduce(
-        (sum, feature) => sum + feature.properties.nb_observations,
-        0
-    );
-
-    $("#nbObs").text(nb_obs);
+    const uuidSet = new Set();
+    observations.features
+        .map(f => f.properties.ids_obs)
+        .forEach(uuidList => uuidList.forEach(uuid => uuidSet.add(uuid)));
+    console.log(uuidSet);
+    nbObs = uuidSet.size;
+    $("#nbObs").text(nbObs);
 }

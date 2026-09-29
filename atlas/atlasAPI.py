@@ -2,7 +2,7 @@
 import json
 import time
 
-from flask import jsonify, Blueprint, request, current_app, render_template
+from flask import jsonify, Blueprint, request, current_app, render_template, abort
 from sqlalchemy import text
 
 from atlas import utils
@@ -34,6 +34,45 @@ def searchAreaAPI():
     limit = request.args.get("limit", 50)
     results = vmAreasRepository.searchAreas(search, limit)
     return jsonify(results)
+
+
+MAX_AREA_GEOMETRY_IDS = 200
+
+
+@api.route("/areasGeojson", methods=["GET"])
+def getAreasGeojsonAPI():
+    """
+    Retourne les géométries GeoJSON d'une liste d'aires (ex : départements).
+
+    Ces géométries sont indépendantes du taxon : le client peut donc les mettre
+    en cache dans le navigateur et ne télécharger que celles qu'il ne possède
+    pas encore.
+
+    Parameters
+    ----------
+    query string:
+        - ids : id_area séparés par des virgules (ex : 1,2,3)
+
+    :returns: list<{id_area, area_name, type_code, type_name, geojson}>
+    """
+    ids = []
+    for value in request.args.get("ids", "").split(","):
+        value = value.strip()
+        if not value:
+            continue
+        if not value.isdigit():
+            abort(
+                400,
+                "Le paramètre 'ids' doit être une liste d'entiers séparés par des virgules",
+            )
+        area_id = int(value)
+        if area_id not in ids:
+            ids.append(area_id)
+
+    response = jsonify(vmAreasRepository.getAreasGeojson(ids[:MAX_AREA_GEOMETRY_IDS]))
+    # On active le cache navigateur.
+    response.headers["Cache-Control"] = "public, max-age=86400"
+    return response
 
 
 @api.route("/observationsMaille", methods=["GET"])

@@ -194,7 +194,6 @@ function setObservationCounter(observations) {
     observations.features
         .map(f => f.properties.ids_obs)
         .forEach(uuidList => uuidList.forEach(uuid => uuidSet.add(uuid)));
-    console.log(uuidSet);
     nbObs = uuidSet.size;
     $("#nbObs").text(nbObs);
 }

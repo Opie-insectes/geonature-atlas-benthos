@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import ast
+import json
 
 from sqlalchemy import distinct, select
 from sqlalchemy.sql.expression import func, and_
@@ -103,6 +104,50 @@ def getAreaFromIdArea(id_area):
     ]
     area_dict["areasParent"] = areas_parent_serialized
     return area_dict
+
+
+def getAreasGeojson(id_areas):
+    """Return the GeoJSON geometry of the given areas.
+
+    The geometries do not depend on the taxon: a client can therefore cache them
+    and only download the ones it is missing when browsing another species sheet.
+
+    Parameters
+    ----------
+    id_areas : list<int>
+
+    Returns
+    -------
+    list<dict>
+        list of {"id_area", "area_name", "type_code", "type_name", "geojson"}
+    """
+    if not id_areas:
+        return []
+
+    results = (
+        db.session.query(
+            VmAreas.id_area,
+            VmAreas.area_name,
+            VmBibAreasTypes.type_code,
+            VmBibAreasTypes.type_name,
+            VmAreas.area_geojson,
+        )
+        .join(VmBibAreasTypes, VmAreas.id_type == VmBibAreasTypes.id_type)
+        .filter(VmAreas.id_area.in_(id_areas))
+        .all()
+    )
+
+    return [
+        {
+            "id_area": r.id_area,
+            "area_name": r.area_name,
+            "type_code": r.type_code,
+            "type_name": r.type_name,
+            "geojson": json.loads(r.area_geojson),
+        }
+        for r in results
+        if r.area_geojson
+    ]
 
 
 def getAreasByTaxon(cd_ref):

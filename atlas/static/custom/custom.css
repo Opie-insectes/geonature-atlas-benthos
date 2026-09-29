@@ -148,8 +148,8 @@ body[page-name="ficheEspece"] {
     /* Fix the year double slider. */
     #sliderContainer {
         display: flex;
-        flex-flow: column nowrap;
         justify-content: start;
+        gap: 1rem;
 
         position: static;
         bottom: unset;
@@ -159,6 +159,10 @@ body[page-name="ficheEspece"] {
         width: 100%;
         background-color: unset;
         border: unset;
+        padding: 0.5rem 1rem;
+    }
+
+    #mapToolbar {
         padding: 0.5rem 1rem;
     }
 

@@ -47,6 +47,7 @@
         var taxonYearMin = {{ taxon.taxonSearch.yearmin }};
         var cd_ref = {{ taxon.taxonSearch.cd_ref }};
         var nb_obs = {{ taxon.taxonSearch.nb_obs }};
+        var taxonDepartments = {{ areas.get('DEP', []) | tojson }};
     </script>
 
     <script src="{{ url_for('static', filename='custom/maps-custom.js') }}"></script>
@@ -60,6 +61,8 @@
     {% else %}
         <script src="{{ url_for('static', filename='mapPoint.js') }}"></script>
     {% endif %}
+    <script src="{{ url_for('static', filename='areaGeometryCache.js') }}"></script>
+    <script src="{{ url_for('static', filename='mapDepartments.js') }}"></script>
 {% endblock %}
 
 {% block content %}

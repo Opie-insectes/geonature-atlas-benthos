@@ -322,7 +322,8 @@ function createLayersSelector(geojson) {
         observationsFeatureGroup[cd_sensitivity] = featureGroup;
         // les cd_sensitivity présent dans le geojson sont triés par ordre de sensibilité croissant
         // par défaut on affiche que la couche du niveau le moins sensible !
-        if (index === 0) {
+        // (sauf en vue département, où les mailles restent masquées)
+        if (index === 0 && !window.departmentViewActive) {
             map.addLayer(featureGroup);
         }
         let layerName = "";

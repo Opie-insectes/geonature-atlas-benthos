@@ -13,7 +13,7 @@
                     <i class="fas fa-search fa-3x blue"></i>
                     <input id="hiddenInputTaxonStat" type="hidden" name="cd_ref">
                     <h1 class="large text-muted" id="nbObs"></h1>
-                    <h4 class="text-muted text-uppercase font-weight-bold">{{ _('observations') }}</h4>
+                    <h4 class="text-muted text-uppercase font-weight-bold">{{ _('observations') | lower }}</h4>
 
                     {% if configuration.AFFICHAGE_DERNIERES_OBS %}
                         <p><a id="localScroll" href="#DernieresObservations" class="btn btn-primary" role="button">{{ _('home.seelatestobs') }}</a></p>

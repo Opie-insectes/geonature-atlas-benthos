@@ -341,7 +341,6 @@ function generateMap(zoomHomeButton) {
     // Map initialization
     firstMapTile = L.tileLayer(configuration.MAP.FIRST_MAP.url, {
         attribution: configuration.MAP.FIRST_MAP.attribution,
-        className: 'greyscale-tiles'
     });
     orthoMap = L.tileLayer(configuration.MAP.SECOND_MAP.url, {
         attribution: configuration.MAP.SECOND_MAP.attribution,

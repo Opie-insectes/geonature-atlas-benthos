@@ -15,10 +15,13 @@
 
                     <div class="statMedias w-100 w-lg-auto {% if not loop.last %}me-lg-4{% endif %} ">
                             <h4 class="title-spaced title-bar">{{ configuration.RANG_STAT_FR[i] }} </h4>
-                            <span class="fs-4 fw-bold" id="rankNbObs{{i}}">
-                            </span> <span class="fs-5"> observations -</span> 
-                            <span class="fs-4 fw-bold" id="rankNbTax{{i}}">
-                            </span> <span class="fs-5"> {{ _('species') |lower }}</span> 
+                            <div class="mb-3">
+                                <span class="fw-bold" id="rankNbObs{{i}}">
+                                </span> observations
+                                &mdash;
+                                <span class="fw-bold" id="rankNbTax{{i}}">
+                                </span> {{ _('species') |lower }}
+                            </div>
                         <div class="row flex-lg-row">
                             {% for j in range(2) %}
                                 {% if loop.index <= customStatMedias[i] | length %}

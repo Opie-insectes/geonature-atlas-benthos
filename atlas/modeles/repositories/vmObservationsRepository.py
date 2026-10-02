@@ -180,7 +180,7 @@ def getGroupeObservers(groupe):
 def getObserversArea_bis(id_area):
     req = (
         select(distinct(VmObservationsGrp.observateurs).label("observateurs"))
-        .join(VmCorAreaSynthese, VmCorAreaSynthese.id_synthese == VmObservationsGrp.id_observation)
+        .join(VmCorAreaSynthese, VmCorAreaSynthese.uuid_observation == VmObservationsGrp.uuid_observation)
         .filter(VmCorAreaSynthese.id_area == id_area)
     )
     results = db.session.execute(req).all()
@@ -228,7 +228,7 @@ def genericStat(tab):
         colonne_rang = getattr(VmTaxons, rang)
         req = (
             select(
-                func.count(distinct(VmObservationsGrp.id_observation)).label("nb_obs"),
+                func.count(distinct(VmObservationsGrp.uuid_observation)).label("nb_obs"),
                 func.count(distinct(VmTaxons.cd_ref)).label("nb_taxons"),
             )
             .join(VmObservationsGrp, VmObservationsGrp.cd_ref == VmTaxons.cd_ref)

@@ -108,8 +108,10 @@ class VmTaxons(db.Model):
             return default_media, False
 
     def shorten_name(self):
-        shorten_nom_vern = self.nom_vern.split(",")[0] if self.nom_vern else ""
-        return shorten_nom_vern + " | <i>" + self.lb_nom + " </i>"
+        result = f"<i>{self.lb_nom}</i>"
+        if self.nom_vern:
+            result = self.nom_vern.split(",")[0] + " | " + result
+        return result
 
 
 class VmCorTaxonAttribut(db.Model):

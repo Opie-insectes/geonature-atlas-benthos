@@ -431,7 +431,8 @@ function createAtlasSchemaEntities() {
                 -v insert_altitudes_values="${insert_altitudes_values}" \
                 -v taxon_time="${time}" \
                 -v reader_user="${user_pg}" \
-                -v observation_data_source="${observation_data_source}"
+                -v observation_data_source="${observation_data_source}" \
+                -v acquisition_framework="${acquisition_framework}"
 
         script_result=$?
         time_diff="$((${SECONDS} - ${time_start}))"

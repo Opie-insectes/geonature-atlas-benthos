@@ -27,7 +27,7 @@ FROM SERVER geonaturedbserver INTO utilisateurs;
 
 -- SELECT drop_foreign_tables('gn_meta');
 IMPORT FOREIGN SCHEMA gn_meta
-LIMIT TO (gn_meta.cor_dataset_actor)
+LIMIT TO (gn_meta.cor_dataset_actor, gn_meta.t_datasets, gn_meta.t_acquisition_frameworks)
 FROM SERVER geonaturedbserver INTO gn_meta;
 
 -- SELECT drop_foreign_tables('taxonomie');

@@ -30,11 +30,13 @@
                                                 {% set img_path =  customStatMedias[i][j].path%}
                                             {% endif %}
                                                 <a class="zoom-effect-wrapper" href="{{ url_for('main.ficheEspece', cd_nom=customStatMedias[i][j].cd_ref) }}">
-                                                        <div class="zoom-effect cover rank-stat-medias-cover"
-                                                             style="background-image: url({{img_path}})">
-                                                        </div>
-                                                    <div class="zoom-effect-overlay text-white fw-bold">
-                                                        <i class="fas fa-eye me-2"></i> {{ customStatMedias[i][j].nb_obs | pretty }} {{ _('observations') }}
+                                                    <div
+                                                        class="zoom-effect cover rank-stat-medias-cover"
+                                                        style="background-image: url({{img_path}})"
+                                                    >
+                                                    </div>
+                                                    <div class="zoom-effect-overlay text-white">
+                                                        <i class="fas fa-eye me-2"></i> {{ customStatMedias[i][j].nb_obs | pretty | safe }}&nbsp;{{ _('observations') | lower }}
                                                     </div>
                                                 </a>
                                             <div class="card-body">

@@ -7,7 +7,7 @@
     <div id="mapStat">
         <div>
             <i class="fas fa-search"></i>
-            <b>{{ taxon.taxonSearch.nb_obs | pretty }}</b>&nbsp;
+            <b>{{ taxon.taxonSearch.nb_obs | pretty | safe }}</b>&nbsp;
             {{- _('observations')|lower if taxon.taxonSearch.nb_obs > 1 else _('observation')|lower }}
             {{ _('first_and_last_obs') }}
             <b>{{ taxon.taxonSearch.yearmin|int }}&hairsp;&ndash;&hairsp;{{ taxon.taxonSearch.yearmax|int }}</b>
@@ -15,7 +15,7 @@
        
         <div>
             <i class="fas fa-map-signs"></i>
-            <b>{{ areas['length']|pretty }}</b>&nbsp;département{{ "s" if areas['length'] > 1 else "" }},
+            <b>{{ areas['length']|pretty | safe }}</b>&nbsp;département{{ "s" if areas['length'] > 1 else "" }},
             <b>{{ num_mailles }}</b>&nbsp;maille{{ "s" if num_mailles > 1 else "" }} 20&thinsp;km
         </div>
     </div>

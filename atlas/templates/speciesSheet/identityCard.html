@@ -161,7 +161,7 @@
                                                             {% endif %}
                                                         </td>
                                                     {% endif %}
-                                                    <td>{{ child.nb_obs | pretty }}</td>
+                                                    <td>{{ child.nb_obs | pretty | safe }}</td>
                                                     <td>
                                                         <a href="{{ url_for('main.ficheEspece', cd_nom=child.cd_ref) }}">
                                                             <span id="ficheGlyficon" class="fas fa-list"

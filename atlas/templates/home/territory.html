@@ -5,7 +5,7 @@
             <div class="card-body pb-0">
                 <h3 class="card-title">
                     <i class="fas fa-binoculars icon-color-title"></i>
-                    {{ configuration.TEXT_SPECIES_OBS }} {{ nb_taxons.nb_taxons | pretty }}
+                    {{ configuration.TEXT_SPECIES_OBS }} {{ nb_taxons.nb_taxons | pretty | safe }}
                     {{ 'espèces' if nb_taxons.nb_taxons > 1 else 'espèce' }}
                 </h3>
             </div>

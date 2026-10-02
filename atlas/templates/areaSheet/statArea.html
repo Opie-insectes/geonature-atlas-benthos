@@ -4,17 +4,17 @@
         <div class="row row-cols-3 row-cols-lg-auto mt-3">
             <div class="col text-center mb-3">
                 <i class="fas fa-search"></i>
-                <br><strong>{{ stats_area.nb_obs | pretty }}</strong>
+                <br><strong>{{ stats_area.nb_obs | pretty | safe }}</strong>
                 <br>{{ _('observations')|lower if stats_area.nb_obs > 1 else _('observation')|lower }}
             </div>
             <div class="col text-center mb-3 border-start">
                 <i class="fas fa-leaf"></i>
-                <br><strong>{{ stats_area.nb_species | pretty }}</strong>
+                <br><strong>{{ stats_area.nb_species | pretty | safe }}</strong>
                 <br>{{ _('species')|lower if stats_area.nb_species > 1 else _('species')|lower }}
             </div>
             <div class="col text-center mb-3 border-start">
                 <i class="fa fa-users"></i>
-                <br><strong>{{ stats_area.nb_observers | pretty }}</strong>
+                <br><strong>{{ stats_area.nb_observers | pretty | safe }}</strong>
                 <br>{{ _('observers')|lower if stats_area.nb_observers > 1 else _('observer')|lower }}
             </div>
 

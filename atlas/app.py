@@ -109,6 +109,6 @@ def create_app(config_overrides=None):
 
         @app.template_filter("pretty")
         def pretty(val):
-            return "{:,}".format(val).replace(",", " ")
+            return "{:,}".format(val).replace(",", "&thinsp;")
 
     return app

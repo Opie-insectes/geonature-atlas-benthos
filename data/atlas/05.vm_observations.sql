@@ -64,7 +64,11 @@ CREATE MATERIALIZED VIEW atlas.vm_observations AS
             USING (id_dataset)
         JOIN gn_meta.t_acquisition_frameworks af
             USING (id_acquisition_framework)
-    WHERE af.unique_acquisition_framework_id = :acquisition_framework
+        JOIN ref_nomenclatures.t_nomenclatures tn
+            ON tn.id_nomenclature = s.id_nomenclature_valid_status
+    WHERE
+        af.unique_acquisition_framework_id = :'acquisition_framework'
+        AND tn.cd_nomenclature = '1'
     ORDER BY s.id_synthese
 WITH DATA;
 
@@ -109,6 +113,15 @@ CREATE MATERIALIZED VIEW atlas.vm_observations_grp AS
             ON c.id_synthese = s.id_synthese
         JOIN atlas.vm_taxref AS tx
             ON tx.cd_nom = s.cd_nom
+        JOIN gn_meta.t_datasets d
+            USING (id_dataset)
+        JOIN gn_meta.t_acquisition_frameworks af
+            USING (id_acquisition_framework)
+        JOIN ref_nomenclatures.t_nomenclatures tn
+            ON tn.id_nomenclature = s.id_nomenclature_valid_status
+        WHERE
+            af.unique_acquisition_framework_id = :'acquisition_framework'
+            AND tn.cd_nomenclature = '1'
     )
     SELECT
         unique_id_sinp_grp AS uuid_observation,
@@ -122,11 +135,6 @@ CREATE MATERIALIZED VIEW atlas.vm_observations_grp AS
         id_dataset,
         cd_ref
     FROM observations
-        JOIN gn_meta.t_datasets d
-            USING (id_dataset)
-        JOIN gn_meta.t_acquisition_frameworks af
-            USING (id_acquisition_framework)
-    WHERE af.unique_acquisition_framework_id = :acquisition_framework
     GROUP BY unique_id_sinp_grp,
         the_geom_point, geojson_point, cd_sensitivity,
         date_min, date_max, altitude_retenue, observateurs, id_dataset,

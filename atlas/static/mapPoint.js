@@ -122,7 +122,6 @@ function loadPoints() {
 
         // Afficher les points
         displayDataByZoomLevel();
-        setObservationCounter(observationsMaille);
         eventOnZoom();
         setupSlider();
     });
@@ -133,7 +132,11 @@ function loadMailles(params, onSuccess = undefined) {
         url: configuration.URL_APPLICATION + "/api/observationsMaille",
         dataType: "json",
         type: "get",
-        data: { cd_ref: cd_ref, ...params },
+        data: {
+            cd_ref: cd_ref,
+            fields: "ids_obs",
+            ...params
+        },
     }).done(function (observations) {
         $("#loaderSpinner").hide();
         observationsMaille = observations;

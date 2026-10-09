@@ -66,6 +66,7 @@
                 map.removeLayer(featureGroup);
             }
         });
+        $("#sliderContainerWrapper").hide();
     }
 
     function restoreMailleLayer() {
@@ -75,6 +76,7 @@
         if (featureGroups.length > 0 && !map.hasLayer(featureGroups[0])) {
             map.addLayer(featureGroups[0]);
         }
+        $("#sliderContainerWrapper").show();
     }
 
     let departmentsLayer = null;

@@ -67,7 +67,7 @@ def getObservationsMaillesChilds(params={}):
         func.max(func.date_part("year", VmObservationsGrp.date_max)).label("last_obs_year"),
         func.count(VmObservationsGrp.uuid_observation).label("obs_nbr"),
     ]
-    if True or "ids_obs" in fields:
+    if "ids_obs" in fields:
         query_select.append(func.array_agg(VmObservationsGrp.uuid_observation).label("ids_obs"))
     query = (
         select(*query_select)
@@ -118,7 +118,7 @@ def getObservationsMaillesChilds(params={}):
                     "cd_sensitivity": o.cd_sensitivity,
                     "nb_observations": int(o.obs_nbr),
                     "last_observation": o.last_obs_year,
-                    "ids_obs": o.ids_obs# if "ids_obs" in fields else None,
+                    "ids_obs": o.ids_obs if "ids_obs" in fields else [],
                 },
             )
             for o in db.session.execute(query).all()

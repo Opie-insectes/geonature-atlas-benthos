@@ -64,7 +64,7 @@ body[page-name="ficheEspece"] {
 
     div.imgWrapper {
         #mainImg {
-        	border-radius: var(--bs-border-radius) 0 0 var(--bs-border-radius);            
+            border-radius: var(--bs-border-radius) 0 0 var(--bs-border-radius);
             cursor: zoom-in;
         }
 
@@ -114,6 +114,9 @@ body[page-name="ficheEspece"] {
     }
 
     #mapContainer {
+        border-top: var(--bs-card-border-width) solid var(--bs-card-border-color);
+        border-bottom: var(--bs-card-border-width) solid var(--bs-card-border-color);
+
         /* Unset bad bottom margin. */
         .leaflet-bottom.leaflet-left {
             margin-bottom: unset;
@@ -145,11 +148,19 @@ body[page-name="ficheEspece"] {
         }
     }
 
+    #mapToolbar {
+        padding: 0.5rem 1rem;
+    }
+
+    #sliderContainerWrapper hr {
+        margin: 0;
+    }
+
     /* Fix the year double slider. */
     #sliderContainer {
         display: flex;
-        justify-content: start;
-        gap: 1rem;
+        justify-content: space-between;
+        gap: 2rem;
 
         position: static;
         bottom: unset;
@@ -160,10 +171,12 @@ body[page-name="ficheEspece"] {
         background-color: unset;
         border: unset;
         padding: 0.5rem 1rem;
+        font-size: 0.9em;
     }
 
-    #mapToolbar {
-        padding: 0.5rem 1rem;
+    #yearMin, #yearMax {
+        min-width: unset;
+        max-width: unset;
     }
 
     /* Use propre rules for min/max years styling instead of filthy nbsps */
@@ -171,7 +184,7 @@ body[page-name="ficheEspece"] {
         display: flex;
         flex-wrap: nowrap;
         align-items: center;
-        gap: 1em;
+        gap: 1.5em;
     }
 
     #synonymes ul li {

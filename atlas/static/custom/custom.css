@@ -195,10 +195,26 @@ body[page-name="ficheEspece"] {
     #synonymes ul li {
         list-style: '= ';
     }
+
+    .graph-legend {
+        column-gap: 0.5rem;
+    }
+
+    .graph-legend-item {
+        display: inline-flex;
+        align-items: baseline;
+    }
+
+    .graph-legend-item > span:first-child {
+        width: 1em;
+        height: 1em;
+        border-radius: var(--bs-border-radius);
+        margin-right: 0.25em;
+    }
 }
 
 /* BOOTSTRAP OVERRIDES */
-/* Using Sass variables for overrides? In this economy?? */
+/* Using Sass variables for overrides? In this economy? */
 
 .btn-outline-primary {
     --bs-btn-color: var(--benthos-primary);

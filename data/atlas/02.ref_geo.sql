@@ -15,6 +15,7 @@ CREATE MATERIALIZED VIEW atlas.vm_bib_areas_types AS
         OR bat.type_code = :'type_maille'
         OR bat.id_type IN (SELECT id_area_type FROM gn_sensitivity.cor_sensitivity_area_type)
         OR bat.type_code = 'DEP' -- Mandatory for status (protection, red lists) 
+        OR bat.type_code = 'REG' -- Mandatory for regional statistics
     
 WITH DATA;
 
@@ -26,6 +27,33 @@ CREATE INDEX ON atlas.vm_bib_areas_types
 
 CREATE INDEX ON atlas.vm_bib_areas_types
     USING btree (type_name);
+
+
+
+
+-- +-----------------------------------------------------------------------------------------------+
+-- vm_cor_maille_region
+CREATE MATERIALIZED VIEW atlas.vm_cor_maille_region AS
+	WITH regions AS (
+	    SELECT id_area, geom
+	    FROM ref_geo.l_areas x
+	    JOIN ref_geo.bib_areas_types bat USING (id_type)
+	    WHERE bat.type_code = 'REG'
+	),
+	maille_covering AS (
+		SELECT
+            x.id_area AS id_maille,
+            r.id_area AS id_region,
+            ST_Area(ST_Intersection(x.geom, r.geom)) / ST_Area(x.geom) AS area_percentage
+		FROM ref_geo.l_areas x
+		JOIN ref_geo.bib_areas_types bat USING (id_type)
+		JOIN regions r ON ST_Intersects(r.geom, x.geom)
+		WHERE bat.type_code = :'type_maille'
+	)
+	SELECT DISTINCT ON (id_maille) id_maille, id_region
+	FROM maille_covering
+	ORDER BY id_maille, area_percentage DESC
+WITH DATA;
 
 
 

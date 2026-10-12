@@ -62,6 +62,7 @@ def getObservationsMaillesChilds(params={}):
     query_select = [
         VMCorMailleObservationGrp.id_maille,
         VmAreas.area_geojson,
+        VmAreas.area_name,
         VMCorMailleObservationGrp.type_code,
         VmObservationsGrp.cd_sensitivity,
         func.max(func.date_part("year", VmObservationsGrp.date_max)).label("last_obs_year"),
@@ -80,6 +81,7 @@ def getObservationsMaillesChilds(params={}):
         .group_by(
             VMCorMailleObservationGrp.id_maille,
             VmAreas.area_geojson,
+            VmAreas.area_name,
             VMCorMailleObservationGrp.type_code,
             VmObservationsGrp.cd_sensitivity,
         )
@@ -114,6 +116,7 @@ def getObservationsMaillesChilds(params={}):
                 geometry=json.loads(o.area_geojson),
                 properties={
                     "id_maille": o.id_maille,
+                    "code_maille": o.area_name,
                     "type_code": o.type_code,
                     "cd_sensitivity": o.cd_sensitivity,
                     "nb_observations": int(o.obs_nbr),
@@ -139,7 +142,7 @@ def countObservationsMaillesChilds(cd_ref):
         .where(
             or_(
                 VmObservationsGrp.cd_ref == cd_ref,
-                VmObservationsGrp.cd_ref.in_(func.atlas.find_all_taxons_childs(cd_ref))
+                VmObservationsGrp.cd_ref.in_(select(func.atlas.find_all_taxons_childs(cd_ref)))
             )
         )
     )

@@ -37,6 +37,7 @@ from atlas.modeles.repositories import (
     vmCorTaxonOrganismRepository,
     vmStatutBdcRepository,
     corSensitivityAreaRepository,
+    vmRegionalResponsibilitiesRepository,
 )
 from atlas.configuration.config_parser import config
 
@@ -192,6 +193,7 @@ def ficheEspece(cd_nom):
     synonyme = vmTaxrefRepository.getSynonymy(cd_ref)
     areas = vmAreasRepository.getAreasByTaxon(cd_ref)
     num_mailles = vmObservationsMaillesRepository.countObservationsMaillesChilds(cd_ref)
+    regional_responsibilities = vmRegionalResponsibilitiesRepository.getResponsabilities(cd_ref)
     taxonomyHierarchy = vmTaxrefRepository.getAllTaxonomy(cd_ref)
     firstPhoto = vmMedias.getFirstPhoto(cd_ref, current_app.config["ATTR_MAIN_PHOTO"])
     photoCarousel = vmMedias.getPhotoCarousel(cd_ref, current_app.config["ATTR_OTHER_PHOTO"])
@@ -243,6 +245,7 @@ def ficheEspece(cd_nom):
         synonyme=synonyme,
         areas=areas,
         num_mailles=num_mailles,
+        regional_responsibilities=regional_responsibilities,
         taxonomyHierarchy=taxonomyHierarchy,
         firstPhoto=firstPhoto,
         photoCarousel=photoCarousel,

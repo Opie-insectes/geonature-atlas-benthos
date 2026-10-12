@@ -131,6 +131,48 @@ function formatPieData(data) {
     };
 }
 
+const responsabilityColorThresholds = [
+    [35, "#dc3545"],
+    [20, "#fd7e14"],
+    [10, "#ffc107"],
+    [5, "#20c997"],
+    [0, "#198754"],
+];
+
+mapDataToColors = (data) =>
+    data.map(value =>
+        responsabilityColorThresholds.find(threshold => value >= threshold[0])[1]
+    );
+
+regionalRespChart = (element, data) => {
+    data = data.sort((a, b) => b.percentage_region - a.percentage_region);
+    const labels = data.map(region => region.name_region);
+    const dataPoints = data.map(region => Number(region.percentage_region));
+    const colors = mapDataToColors(dataPoints);
+    return new Chart(element, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    data: dataPoints,
+                    backgroundColor: colors,
+                    borderWidth: 0,
+                },
+            ],
+        },
+        options: {
+            indexAxis: 'y',
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
+        },
+    });
+};
+
 const getChartDatas = function (data, key) {
     const values = [];
     for (var i = 0; i < data.length; i++) {
@@ -156,6 +198,11 @@ if (altiChartElement) {
         getChartDatas(dataset, "altitude"),
         getChartDatas(dataset, "value"),
     );
+}
+
+const regionalRespChartElement = document.getElementById("regionsRespChart");
+if (regionalRespChartElement) {
+    regionalRespChart(regionalRespChartElement, responsabilities);
 }
 
 const dataSourceChartElement = document.getElementById("organismChart");

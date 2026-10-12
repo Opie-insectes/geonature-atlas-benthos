@@ -259,3 +259,20 @@ def getStatsByArea(id_area):
     if not result:
         raise NotFound()
     return result.as_dict()
+
+
+def getAreasByType(type_code: str):
+    return [
+        {
+            "id_area": row.id_area,
+            "area_code": row.area_code,
+            "area_name": row.area_name,
+        }
+        for row in db.session.query(
+            VmAreas.id_area,
+            VmAreas.area_code,
+            VmAreas.area_name,
+        )
+        .join(VmBibAreasTypes, VmBibAreasTypes.id_type == VmAreas.id_type)
+        .where(VmBibAreasTypes.type_code == type_code)
+    ]

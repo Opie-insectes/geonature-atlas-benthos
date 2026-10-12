@@ -537,9 +537,11 @@ function attachMailleHandlers(layer, onClickHandler) {
 // eslint-disable-next-line no-unused-vars
 function onEachFeatureMaille(feature, layer) {
     popupContent =
-        "<b>Nombre d'observation(s)&nbsp;: </b>" +
+        "<b> Maille&nbsp;:</b> " +
+        feature.properties.code_maille +
+        "</br> <b> Nombre d'observation(s)&nbsp;:</b> " +
         feature.properties.nb_observations +
-        "</br> <b> Dernière observation&nbsp;: </b>" +
+        "</br> <b> Dernière observation&nbsp;:</b> " +
         feature.properties.last_observation +
         " ";
     layer.bindPopup(popupContent);

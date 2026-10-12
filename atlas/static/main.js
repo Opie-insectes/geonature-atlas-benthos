@@ -82,7 +82,7 @@ autocompleteSearch = function (inputID, urlDestination, nbProposal) {
             var url = ui.item.value;
             if (urlDestination === "espece") {
                 location.href =
-                    window.LANGUAGE_PREFIXED_URL_APPLICATION + "/espece/" + url;
+                    window.LANGUAGE_PREFIXED_URL_APPLICATION + "/taxon/" + url;
                 const splited_label = ui.item.label.split(" = ");
                 const label_for_input =
                     splited_label[0] !== ""

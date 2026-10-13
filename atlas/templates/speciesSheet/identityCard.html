@@ -30,13 +30,11 @@
         <div class="col-12" id="taxonIdentity">
         {% endif %}
             <div>
-                <div id="taxonName" class="d-flex justify-content-between">
+                <div id="taxonName" class="d-flex justify-content-between" data-lbnom="{{ taxon.taxonSearch.lb_nom }}">
                     <div>
+                        <h4 class="strong">{{ taxon.taxonSearch.nom_complet_html|safe }}</h4>
                         {% if taxon.taxonSearch.nom_vern != None %}
-                            <h4 class="strong">{{ taxon.taxonSearch.nom_vern }}</h4>
-                            <h4><i>{{ taxon.taxonSearch.nom_complet_html|safe }}</i></h4>
-                        {% else %}
-                            <h4 class="strong"><i>{{ taxon.taxonSearch.nom_complet_html|safe }}</i></h4>
+                            <h4>{{ taxon.taxonSearch.nom_vern }}</h4>
                         {% endif %}
                     </div>
                     <div>

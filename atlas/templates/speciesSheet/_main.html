@@ -64,6 +64,7 @@
     {% endif %}
     <script src="{{ url_for('static', filename='areaGeometryCache.js') }}"></script>
     <script src="{{ url_for('static', filename='mapDepartments.js') }}"></script>
+    <script src="{{ url_for('static', filename='ephemeraRefs.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -90,6 +91,7 @@
             {% endif %}
             {% include 'templates/speciesSheet/map.html' %}
             {% include 'templates/speciesSheet/otherInformations.html' %}
+            {% include 'templates/speciesSheet/ephemera.html' %}
         </div>
 
         <!-- Right row -->

@@ -63,7 +63,7 @@ body[page-name="index"] {
 }
 
 body[page-name="ficheEspece"] {
-    #taxonIdentity, #otherInformations, #blocInfos, .graph-block {
+    #taxonIdentity, #otherInformations, #blocInfos, #ephemeraRefs, .graph-block {
         padding: 1rem;
     }
 

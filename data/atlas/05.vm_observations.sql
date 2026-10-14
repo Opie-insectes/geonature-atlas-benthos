@@ -96,21 +96,25 @@ CREATE INDEX ON atlas.vm_observations
 -- A second observation VM that groups actual observations together:
 -- GN synthese splits determinations into individual rows whereas
 -- we want to have them grouped per actual observation in many cases.
+-- For some reason, observers name are not always sorted the same way in the
+-- multiple synthese rows that are part of one observation, so they prevent a
+-- proper GROUP BY; this is why we have a distinct "observers" query.
 CREATE MATERIALIZED VIEW atlas.vm_observations_grp AS
     WITH observations AS (
-	    SELECT
-	        s.id_synthese,
-	        s.unique_id_sinp,
-	        s.unique_id_sinp_grp,
-	        c.geom_point AS the_geom_point,
-	        st_asgeojson(c.geom_point) AS geojson_point,
-	        c.cd_sensitivity,
-	        s.date_min AS date_min,
-	        s.date_max AS date_max,
-	        (s.altitude_min + s.altitude_max) / 2 AS altitude_retenue,
-	        s.observers AS observateurs,
-	        s.id_dataset,
-	        tx.cd_ref
+        SELECT
+            s.id_synthese,
+            s.unique_id_sinp,
+            s.unique_id_sinp_grp,
+            c.geom_point AS the_geom_point,
+            st_asgeojson(c.geom_point) AS geojson_point,
+            c.cd_sensitivity,
+            s.date_min AS date_min,
+            s.date_max AS date_max,
+            (s.altitude_min + s.altitude_max) / 2 AS altitude_retenue,
+            s.observers AS observateurs,
+            s.id_dataset,
+            tx.cd_ref,
+            tn.cd_nomenclature AS statut_valid
         FROM gn_synthese.synthese AS s
         JOIN atlas.vm_observations_centroids AS c
             ON c.id_synthese = s.id_synthese
@@ -125,6 +129,11 @@ CREATE MATERIALIZED VIEW atlas.vm_observations_grp AS
         WHERE
             af.unique_acquisition_framework_id = :'acquisition_framework'
             AND tn.cd_nomenclature IN ('1', '2')
+    ),
+    observers AS (
+        SELECT DISTINCT ON (unique_id_sinp_grp) unique_id_sinp_grp, observers
+        FROM gn_synthese.synthese
+        ORDER BY unique_id_sinp_grp, observers
     )
     SELECT
         unique_id_sinp_grp AS uuid_observation,
@@ -134,13 +143,14 @@ CREATE MATERIALIZED VIEW atlas.vm_observations_grp AS
         cd_sensitivity,
         date_min, date_max,
         altitude_retenue,
-        observateurs,
+        p.observers AS observateurs,
         id_dataset,
         cd_ref
     FROM observations
+    JOIN observers p USING (unique_id_sinp_grp)
     GROUP BY unique_id_sinp_grp,
         the_geom_point, geojson_point, cd_sensitivity,
-        date_min, date_max, altitude_retenue, observateurs, id_dataset,
+        date_min, date_max, altitude_retenue, p.observers, id_dataset,
         cd_ref
     ORDER BY unique_id_sinp_grp
 WITH DATA;

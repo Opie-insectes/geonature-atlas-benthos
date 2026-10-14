@@ -6,3 +6,6 @@ CREATE MATERIALIZED VIEW atlas.vm_nomenclatures AS
     JOIN ref_nomenclatures.bib_nomenclatures_types bnt USING (id_type)
     WHERE bnt.mnemonique IN ('STADE_VIE', 'STATUT_VALID')
 WITH DATA;
+
+CREATE UNIQUE INDEX ON atlas.vm_nomenclatures
+    USING btree (id_nomenclature);

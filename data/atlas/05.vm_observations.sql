@@ -42,6 +42,9 @@ CREATE MATERIALIZED VIEW atlas.vm_observations_centroids AS
     GROUP BY s.id_synthese, se.cd_nomenclature
 WITH DATA;
 
+CREATE UNIQUE INDEX ON atlas.vm_observations_centroids
+    USING btree (id_synthese);
+
 -- All the observations to use in the Atlas
 CREATE MATERIALIZED VIEW atlas.vm_observations AS
     SELECT
@@ -91,7 +94,7 @@ CREATE INDEX ON atlas.vm_observations
     USING gist (the_geom_point);
 
 -- A second observation VM that groups actual observations together:
--- GN synthese splits determinations into individual rows whereas 
+-- GN synthese splits determinations into individual rows whereas
 -- we want to have them grouped per actual observation in many cases.
 CREATE MATERIALIZED VIEW atlas.vm_observations_grp AS
     WITH observations AS (

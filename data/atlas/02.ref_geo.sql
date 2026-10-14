@@ -55,6 +55,9 @@ CREATE MATERIALIZED VIEW atlas.vm_cor_maille_region AS
 	ORDER BY id_maille, area_percentage DESC
 WITH DATA;
 
+CREATE UNIQUE INDEX ON atlas.vm_cor_maille_region
+    USING btree (id_maille, id_region);
+
 
 
 

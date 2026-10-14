@@ -146,3 +146,24 @@ class VmTaxonArea(db.Model):
 
     cd_ref: Mapped[int] = mapped_column(primary_key=True)
     id_area: Mapped[int] = mapped_column(primary_key=True)
+
+
+class VmTaxonAreaByRange(db.Model):
+    __tablename__ = "vm_cor_taxon_area_by_range"
+    __table_args__ = {"schema": "atlas"}
+
+    cd_ref: Mapped[int] = mapped_column(primary_key=True)
+    id_area: Mapped[int] = mapped_column(primary_key=True)
+    year_min: Mapped[int] = mapped_column()
+    year_max: Mapped[int] = mapped_column()
+
+
+class VmTaxonAreaByCumul(db.Model):
+    __tablename__ = "vm_cor_taxon_area_by_cumul"
+    __table_args__ = {"schema": "atlas"}
+
+    cd_ref: Mapped[int] = mapped_column(primary_key=True)
+    id_type: Mapped[int] = mapped_column(primary_key=True)
+    cumul: Mapped[int] = mapped_column()
+    year_max: Mapped[int] = mapped_column()
+

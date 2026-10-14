@@ -193,6 +193,7 @@ def ficheEspece(cd_nom):
     synonyme = vmTaxrefRepository.getSynonymy(cd_ref)
     areas = vmAreasRepository.getAreasByTaxon(cd_ref)
     num_mailles = vmObservationsMaillesRepository.countObservationsMaillesChilds(cd_ref)
+    mailles_by_year_range = vmAreasRepository.getTaxonAreaByRange(cd_ref, "M20")
     regional_responsibilities = vmRegionalResponsibilitiesRepository.getResponsabilities(cd_ref)
     taxonomyHierarchy = vmTaxrefRepository.getAllTaxonomy(cd_ref)
     firstPhoto = vmMedias.getFirstPhoto(cd_ref, current_app.config["ATTR_MAIN_PHOTO"])
@@ -245,6 +246,7 @@ def ficheEspece(cd_nom):
         synonyme=synonyme,
         areas=areas,
         num_mailles=num_mailles,
+        mailles_by_year_range=mailles_by_year_range,
         regional_responsibilities=regional_responsibilities,
         taxonomyHierarchy=taxonomyHierarchy,
         firstPhoto=firstPhoto,

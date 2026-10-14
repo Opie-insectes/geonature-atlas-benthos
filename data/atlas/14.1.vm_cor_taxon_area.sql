@@ -62,12 +62,50 @@ CREATE MATERIALIZED VIEW atlas.vm_cor_taxon_area_by_range AS
         year_max
     FROM taxons AS t
     JOIN atlas.vm_cor_area_synthese AS cas ON cas.id_synthese = ANY(t.observations)
-    WHERE cas.is_valid_for_display IS TRUE ;
+    WHERE cas.is_valid_for_display IS TRUE
+WITH DATA;
 
 CREATE UNIQUE INDEX ON atlas.vm_cor_taxon_area
     USING btree (cd_ref, id_area);
 
 
+CREATE MATERIALIZED VIEW atlas.vm_cor_taxon_area_by_cumul AS
+    WITH ranges AS (
+        SELECT *
+        FROM vm_cor_taxon_area_by_range cta
+        JOIN vm_l_areas a USING (id_area)
+        WHERE year_min >= 2000
+    )
+    SELECT cd_ref, id_type, COUNT(DISTINCT id_area) AS cumul, 2004 AS year_max
+    FROM ranges
+    WHERE year_max <= 2004
+    GROUP BY cd_ref, id_type
+    UNION ALL
+    SELECT cd_ref, id_type, COUNT(DISTINCT id_area) AS cumul, 2009 AS year_max
+    FROM ranges
+    WHERE year_max <= 2009
+    GROUP BY cd_ref, id_type
+    UNION ALL
+    SELECT cd_ref, id_type, COUNT(DISTINCT id_area) AS cumul, 2014 AS year_max
+    FROM ranges
+    WHERE year_max <= 2014
+    GROUP BY cd_ref, id_type
+    UNION ALL
+    SELECT cd_ref, id_type, COUNT(DISTINCT id_area) AS cumul, 2019 AS year_max
+    FROM ranges
+    WHERE year_max <= 2019
+    GROUP BY cd_ref, id_type
+    UNION ALL
+    SELECT cd_ref, id_type, COUNT(DISTINCT id_area) AS cumul, NULL AS year_max
+    FROM ranges
+    GROUP BY cd_ref, id_type
+WITH DATA;
+
+CREATE UNIQUE INDEX ON atlas.vm_cor_taxon_area
+    USING btree (cd_ref, id_type, year_max);
+
+
+-- Calcul des responsabilités régionales.
 CREATE MATERIALIZED VIEW atlas.vm_regional_responsibilities AS
 	WITH mailles_per_region AS (
 		SELECT cd_ref, vla.id_area, COUNT(*) AS num_mailles

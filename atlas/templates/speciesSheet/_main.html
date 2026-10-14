@@ -44,6 +44,7 @@
         {% endif %}
         var observationsPoint = [];
         var observationsMaille = [];
+        var mailles_by_year_range = {{ mailles_by_year_range | tojson }};
         var responsabilities = {{ regional_responsibilities | tojson }};
         var taxonYearMin = {{ taxon.taxonSearch.yearmin }};
         var cd_ref = {{ taxon.taxonSearch.cd_ref }};

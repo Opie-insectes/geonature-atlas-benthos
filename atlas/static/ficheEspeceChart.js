@@ -131,6 +131,81 @@ function formatPieData(data) {
     };
 }
 
+mailleObsChart = (element, data) => {
+    const yearRanges = data.map(range => {
+        if (range.year_min === null) {
+            return window.i18n.historical_data;
+        }
+        return `${range.year_min} – ${range.year_max ?? window.i18n.present}`
+    });
+
+    // Isolate the historical data (first data point, without lower year bound)
+    // from the rest of the dataset so that we can show a different color.
+    const historicalDataRange = data.shift();
+    const values = data.map(range => range.count_perc);
+    values.unshift(null); // no data for first range.
+    const cumul = data.map(range => range.cumul_perc);
+    cumul.unshift(null); // no data for first range.
+
+    return new Chart(element, {
+        type: "bar",
+        data: {
+            labels: yearRanges,
+            datasets: [
+                {
+                    label: window.i18n.historical_data,
+                    data: [historicalDataRange.count_perc],
+                    backgroundColor: chartSecondColor,
+                    borderWidth: 0,
+                },
+                {
+                    label: window.i18n['benthos.species.percentage_maille_obs'],
+                    data: values,
+                    backgroundColor: chartMainColor,
+                    borderWidth: 0,
+                },
+                {
+                    type: 'line',
+                    label: window.i18n['benthos.species.percentage_maille_obs_cumul'],
+                    data: cumul,
+                    backgroundColor: "#1d325d",
+                    borderColor: "#1d325d",
+                },
+            ],
+        },
+        options: {
+            scales: {
+                y: {
+                    ticks: {
+                        beginAtZero: true,
+                        callback: (value, index, ticks) => `${value} %`
+                    },
+                },
+                x: {
+                    stacked: true,
+                    gridLines: {
+                        display: false,
+                    },
+                },
+            },
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: "top",
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            const value = context.parsed.y.toFixed(2);
+                            return `${context.dataset.label} : ${value} %`;
+                        },
+                    },
+                },
+            },
+        },
+    });
+};
+
 const responsabilityColorThresholds = [
     [35, "#dc3545"],
     [20, "#fd7e14"],
@@ -198,6 +273,11 @@ if (altiChartElement) {
         getChartDatas(dataset, "altitude"),
         getChartDatas(dataset, "value"),
     );
+}
+
+const mailleChartElement = document.getElementById("mailleChart");
+if (mailleChartElement) {
+    mailleObsChart(mailleChartElement, mailles_by_year_range);
 }
 
 const regionalRespChartElement = document.getElementById("regionsRespChart");

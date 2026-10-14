@@ -76,31 +76,42 @@
 
     <div class="card mt-4 graph-block">
         <div class="card-body p-2">
-            <h4 class="title-bar title-spaced text-center fw-bold">{{ _('benthos.species.regions_respo') }}</h4>
-        </div>
-        <div class="graph-legend d-flex flex-wrap justify-content-center text-muted small">
-            <div class="graph-legend-item">
-                <span style="background-color: #dc3545" role="presentation"></span>
-                &ge;&thinsp;35&thinsp;% (capitale)
-            </div>
-            <div class="graph-legend-item">
-                <span style="background-color: #fd7e14" role="presentation"></span>
-                &gt;&thinsp;20&thinsp;% (forte)
-            </div>
-            <div class="graph-legend-item">
-                <span style="background-color: #ffc107" role="presentation"></span>
-                &gt;&thinsp;10&thinsp;% (moyenne)
-            </div>
-            <div class="graph-legend-item">
-                <span style="background-color: #20c997" role="presentation"></span>
-                &gt;&thinsp;5&thinsp;% (diluée)
-            </div>
-            <div class="graph-legend-item">
-                <span style="background-color: #198754" role="presentation"></span>
-                &lt;&thinsp;5&thinsp;% (très diluée)
-            </div>
+            <h4 class="title-bar title-spaced text-center fw-bold">{{ _('benthos.species.maille_graph') }}</h4>
         </div>
         <div class="chart-container" style="position: relative; height:200px; width:100%">
+            <canvas id="mailleChart"></canvas>
+        </div>
+        <span class="d-block text-center text-muted small my-2">{{ _('benthos.species.maille_graph_desc') }}</span>
+    </div>
+
+    <div class="card mt-4 graph-block">
+        <div class="card-body p-2">
+            <h4 class="title-bar title-spaced text-center fw-bold">{{ _('benthos.species.regions_respo') }}</h4>
+            <span class="d-block text-center text-muted small my-2">{{ _('benthos.species.regions_respo_dataset') }}</span>
+            <div class="graph-legend d-flex flex-wrap justify-content-center text-muted small">
+                <div class="graph-legend-item">
+                    <span style="background-color: #dc3545" role="presentation"></span>
+                    &ge;&thinsp;35&thinsp;% (capitale)
+                </div>
+                <div class="graph-legend-item">
+                    <span style="background-color: #fd7e14" role="presentation"></span>
+                    &gt;&thinsp;20&thinsp;% (forte)
+                </div>
+                <div class="graph-legend-item">
+                    <span style="background-color: #ffc107" role="presentation"></span>
+                    &gt;&thinsp;10&thinsp;% (moyenne)
+                </div>
+                <div class="graph-legend-item">
+                    <span style="background-color: #20c997" role="presentation"></span>
+                    &gt;&thinsp;5&thinsp;% (diluée)
+                </div>
+                <div class="graph-legend-item">
+                    <span style="background-color: #198754" role="presentation"></span>
+                    &lt;&thinsp;5&thinsp;% (très diluée)
+                </div>
+            </div>
+        </div>
+        <div class="chart-container" style="position: relative; height:300px; width:100%">
             <canvas id="regionsRespChart"></canvas>
         </div>
         <span class="d-block text-center text-muted small mt-2">{{ _('benthos.species.regions_respo_graph') }}</span>

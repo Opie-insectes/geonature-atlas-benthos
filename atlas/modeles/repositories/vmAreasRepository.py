@@ -4,7 +4,7 @@ import ast
 import json
 
 from sqlalchemy import distinct, select
-from sqlalchemy.sql.expression import func, and_
+from sqlalchemy.sql.expression import func, and_, or_
 from sqlalchemy.dialects.postgresql import array
 
 from flask import current_app
@@ -18,7 +18,11 @@ from atlas.modeles.entities.vmAreas import (
     VmAreasWithObs,
 )
 from atlas.modeles.entities.vmObservations import VmObservations
-from atlas.modeles.entities.vmTaxons import VmTaxonArea
+from atlas.modeles.entities.vmTaxons import (
+    VmTaxonArea,
+    VmTaxonAreaByCumul,
+    VmTaxonAreaByRange,
+)
 from atlas.env import db
 
 
@@ -262,6 +266,7 @@ def getStatsByArea(id_area):
 
 
 def getAreasByType(type_code: str):
+    """Get the areas with this type ('REG', 'M20', etc.)."""
     return [
         {
             "id_area": row.id_area,
@@ -274,5 +279,64 @@ def getAreasByType(type_code: str):
             VmAreas.area_name,
         )
         .join(VmBibAreasTypes, VmBibAreasTypes.id_type == VmAreas.id_type)
-        .where(VmBibAreasTypes.type_code == type_code)
+        .filter(VmBibAreasTypes.type_code == type_code)
+    ]
+
+
+def countAreasByType(type_code: str):
+    """Count the areas with this type."""
+    return (
+        db.session.query(func.count(VmAreas.id_area))
+        .join(VmBibAreasTypes, VmBibAreasTypes.id_type == VmAreas.id_type)
+        .filter(VmBibAreasTypes.type_code == type_code)
+        .scalar()
+    )
+
+
+def getTaxonAreaByRange(cd_ref: int, area_type: str):
+    """Get the taxon-by-area data by year ranges."""
+    total_mailles = countAreasByType(area_type)
+    query = (
+        # We fetch the area count from the range view but also the cumulative
+        # count from the cumul view.
+        db.session.query(
+            VmTaxonAreaByRange.year_min,
+            VmTaxonAreaByRange.year_max,
+            func.count(VmTaxonAreaByRange.id_area).label("area_count"),
+            VmTaxonAreaByCumul.cumul,
+        )
+        .join(VmAreas, VmAreas.id_area == VmTaxonAreaByRange.id_area)
+        .join(VmBibAreasTypes, VmBibAreasTypes.id_type == VmAreas.id_type)
+        .outerjoin(VmTaxonAreaByCumul, and_(
+            or_(
+                VmTaxonAreaByCumul.year_max == VmTaxonAreaByRange.year_max,
+                and_(
+                    VmTaxonAreaByCumul.year_max == None,
+                    VmTaxonAreaByRange.year_max == None,
+                )
+            ),
+            VmTaxonAreaByCumul.cd_ref == VmTaxonAreaByRange.cd_ref,
+            VmTaxonAreaByCumul.id_type == VmAreas.id_type,
+        ))
+        .filter(
+            VmTaxonAreaByRange.cd_ref == cd_ref,
+            VmBibAreasTypes.type_code == area_type,
+        )
+        .group_by(
+            VmTaxonAreaByRange.year_min,
+            VmTaxonAreaByRange.year_max,
+            VmTaxonAreaByCumul.cumul,
+        )
+        .order_by(func.coalesce(VmTaxonAreaByRange.year_min, 0))
+    )
+    return [
+        {
+            "year_min": row.year_min,
+            "year_max": row.year_max,
+            "count": row.area_count,
+            "count_perc": row.area_count / total_mailles * 100,
+            "cumul": row.cumul,
+            "cumul_perc": (row.cumul or 0) / total_mailles * 100,
+        }
+        for row in query
     ]

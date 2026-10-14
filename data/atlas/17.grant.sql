@@ -35,5 +35,6 @@ GRANT SELECT ON TABLE atlas.vm_bdc_statut TO :reader_user ;
 GRANT SELECT ON TABLE atlas.vm_cor_taxon_statut_area TO :reader_user ;
 GRANT SELECT ON TABLE atlas.vm_cor_taxon_area TO :reader_user ;
 GRANT SELECT ON TABLE atlas.vm_cor_taxon_area_by_range TO :reader_user ;
+GRANT SELECT ON TABLE atlas.vm_cor_taxon_area_by_cumul TO :reader_user ;
 GRANT SELECT ON TABLE atlas.vm_regional_responsibilities TO :reader_user ;
 

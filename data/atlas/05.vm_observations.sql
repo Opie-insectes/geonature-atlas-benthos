@@ -71,7 +71,7 @@ CREATE MATERIALIZED VIEW atlas.vm_observations AS
             ON tn.id_nomenclature = s.id_nomenclature_valid_status
     WHERE
         af.unique_acquisition_framework_id = :'acquisition_framework'
-        AND tn.cd_nomenclature = '1'
+        AND tn.cd_nomenclature IN ('1', '2')
     ORDER BY s.id_synthese
 WITH DATA;
 
@@ -124,7 +124,7 @@ CREATE MATERIALIZED VIEW atlas.vm_observations_grp AS
             ON tn.id_nomenclature = s.id_nomenclature_valid_status
         WHERE
             af.unique_acquisition_framework_id = :'acquisition_framework'
-            AND tn.cd_nomenclature = '1'
+            AND tn.cd_nomenclature IN ('1', '2')
     )
     SELECT
         unique_id_sinp_grp AS uuid_observation,

@@ -65,15 +65,15 @@ CREATE MATERIALIZED VIEW atlas.vm_cor_taxon_area_by_range AS
     WHERE cas.is_valid_for_display IS TRUE
 WITH DATA;
 
-CREATE UNIQUE INDEX ON atlas.vm_cor_taxon_area
+CREATE UNIQUE INDEX ON atlas.vm_cor_taxon_area_by_range
     USING btree (cd_ref, id_area);
 
 
 CREATE MATERIALIZED VIEW atlas.vm_cor_taxon_area_by_cumul AS
     WITH ranges AS (
         SELECT *
-        FROM vm_cor_taxon_area_by_range cta
-        JOIN vm_l_areas a USING (id_area)
+        FROM atlas.vm_cor_taxon_area_by_range cta
+        JOIN atlas.vm_l_areas a USING (id_area)
         WHERE year_min >= 2000
     )
     SELECT cd_ref, id_type, COUNT(DISTINCT id_area) AS cumul, 2004 AS year_max
@@ -101,7 +101,7 @@ CREATE MATERIALIZED VIEW atlas.vm_cor_taxon_area_by_cumul AS
     GROUP BY cd_ref, id_type
 WITH DATA;
 
-CREATE UNIQUE INDEX ON atlas.vm_cor_taxon_area
+CREATE UNIQUE INDEX ON atlas.vm_cor_taxon_area_by_cumul
     USING btree (cd_ref, id_type, year_max);
 
 

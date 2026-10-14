@@ -67,6 +67,10 @@ body[page-name="ficheEspece"] {
         padding: 1rem;
     }
 
+    #taxonomy {
+        margin-top: unset;
+    }
+
     div.imgWrapper {
         #mainImg {
             border-radius: var(--bs-border-radius) 0 0 var(--bs-border-radius);
@@ -102,6 +106,10 @@ body[page-name="ficheEspece"] {
                 background-color: rgba(0, 0, 0, 0.66);
                 backdrop-filter: blur(3px);
             }
+        }
+
+        .slider-size {
+            height: 500px;
         }
     }
 

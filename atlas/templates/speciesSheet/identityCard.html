@@ -32,10 +32,12 @@
             <div>
                 <div id="taxonName" class="d-flex justify-content-between" data-lbnom="{{ taxon.taxonSearch.lb_nom }}">
                     <div>
-                        <h4 class="strong">{{ taxon.taxonSearch.nom_complet_html|safe }}</h4>
-                        {% if taxon.taxonSearch.nom_vern != None %}
-                            <h4>{{ taxon.taxonSearch.nom_vern }}</h4>
-                        {% endif %}
+                        <p>
+                            {{ taxon.taxonSearch.nom_complet_html|safe }}
+                            {% if taxon.taxonSearch.nom_vern != None %}
+                                <br>{{ taxon.taxonSearch.nom_vern }}
+                            {% endif %}
+                        </p>
                     </div>
                     <div>
                         {% if configuration.DISPLAY_PATRIMONIALITE and taxon.taxonSearch.patrimonial == "oui" %}
@@ -64,7 +66,7 @@
                             </a>
                         {% endif %}
 
-
+                        {#
                         <a href="{{ url_for('main.ficheGroupe', groupe=taxon.taxonSearch.groupAccent ) }}">
                             <img class="INPNgroup"
                                  src="{{ url_for('static', filename='images/picto_'+ taxon.taxonSearch.group2_inpn| replace(" ", "_")|urlencode+'.png') }}"
@@ -73,12 +75,14 @@
                                  title="{{ taxon.taxonSearch.group2_inpn }}"
                                  data-bs-placement="right">
                         </a>
+                        #}
                     </div>
                 </div>
 
                 <div id="taxonomy" class="main-color-link">
+                    <p>
                     {% for taxon in taxonomyHierarchy %}
-                        {{ taxon.nom_rang }} :
+                        {{ taxon.nom_rang }}&nbsp;:
                         <i>
                         {% if ( taxon.tri_rang >= configuration.LIMIT_FICHE_LISTE_HIERARCHY ) %}
                             <a href="{{ url_for('main.ficheEspece', cd_nom=taxon.cd_ref) }}"><i>{{ taxon.lb_nom }}</i></a>
@@ -86,10 +90,9 @@
                             <a href="{{ url_for('main.ficheRangTaxonomie', cd_ref=taxon.cd_ref) }}"><i>{{ taxon.lb_nom }}</i></a>
                         {% endif %}
                         </i>
-                        {% if not loop.last %}
-                            <span class="fas fa-chevron-right"></span>
-                        {% endif %}
+                        {% if not loop.last %} <br> {% endif %}
                     {% endfor %}
+                    </p>
                 </div>
 
                 {% if configuration.AFFICHAGE_STATUTS and groupesStatuts|length != 0 %}

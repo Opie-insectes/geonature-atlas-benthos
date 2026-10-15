@@ -66,7 +66,7 @@ CREATE MATERIALIZED VIEW atlas.vm_cor_taxon_area_by_range AS
 WITH DATA;
 
 CREATE UNIQUE INDEX ON atlas.vm_cor_taxon_area_by_range
-    USING btree (cd_ref, id_area);
+    USING btree (cd_ref, id_area, year_min, year_max);
 
 
 CREATE MATERIALIZED VIEW atlas.vm_cor_taxon_area_by_cumul AS

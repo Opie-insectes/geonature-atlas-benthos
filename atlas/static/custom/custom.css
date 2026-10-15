@@ -200,6 +200,14 @@ body[page-name="ficheEspece"] {
         gap: 1.5em;
     }
 
+    #bibliographie ul {
+        list-style: none;
+
+        li {
+            text-indent: -1rem;
+        }
+    }
+
     #synonymes ul li {
         list-style: '= ';
     }
